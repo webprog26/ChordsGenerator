@@ -2,4 +2,6 @@
     <string name="app_name">GhordsGenerator</string>
 
     <string name="btn_go">Go</string>
+
+    <string name="c_maj_ordinary">c_maj_ordinary</string>
 </resources>
