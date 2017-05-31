@@ -93,6 +93,8 @@ public class StartActivity extends AppCompatActivity {
                     llLoading.setVisibility(View.VISIBLE);
                 }
 
+                getTvLoading().setText(getString(R.string.reading_chords_data));
+
                 EventBus.getDefault().post(new ReadJSONDataEvent());
 
             } else {
@@ -143,10 +145,16 @@ public class StartActivity extends AppCompatActivity {
 
             if(chordsSize > 0){
 
+                ProgressBar pbLoading = getPbLoading();
+
                 getAppDataManager().setChordsCount(chordsSize);
                 Log.i(TAG, "chordsSize: " + chordsSize);
 
-                getPbLoading().setMax(chordsSize);
+                if(pbLoading.getVisibility() == View.INVISIBLE){
+                    pbLoading.setVisibility(View.VISIBLE);
+                }
+
+                pbLoading.setMax(chordsSize);
 
                 for(Chord chord: chords){
                     chord.setChordShapesTableName(getShapeTableNameHelper().getChordShapesTableName(chord.getChordTitle()));

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">GhordsGenerator</string>
 
+    <string name="reading_chords_data">Reading chords data</string>
     <string name="loading_text">Loading chord %1$s</string>
 
     <string name="btn_go">Go</string>
