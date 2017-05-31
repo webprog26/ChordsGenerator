@@ -8,16 +8,18 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.ConvertDataToPOJOClassesEvent;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.DataHasBeenConvertedToPOJOsEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.JSONDataHasBeenReadEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.ReadJSONDataEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.AppDataManager;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,12 +37,15 @@ public class StartActivity extends AppCompatActivity {
     Button mBtnGo;
 
     private SharedPreferences mSharedPreferences;
+    private AppDataManager mAppDataManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         ButterKnife.bind(this);
+
+        mAppDataManager = new AppDataManager(getAssets());
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     }
@@ -94,16 +99,41 @@ public class StartActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onReadJSONDataEvent(ReadJSONDataEvent readJSONDataEvent){
-        new AppDataManager(getAssets()).readJSONData();
+        getAppDataManager().readJSONData();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onJSONDataHasBeenReadEvent(JSONDataHasBeenReadEvent jsonDataHasBeenReadEvent){
-
+        Log.i(TAG, "onJSONDataHasBeenReadEvent");
         String resultString = jsonDataHasBeenReadEvent.getJSONString();
 
         if(resultString != null){
-            Log.i(TAG, resultString);
+            EventBus.getDefault().post(new ConvertDataToPOJOClassesEvent(resultString));
         }
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onConvertDataToPOJOClassesEvent(ConvertDataToPOJOClassesEvent convertDataToPOJOClassesEvent){
+        Log.i(TAG, "onConvertDataToPOJOClassesEvent");
+        getAppDataManager().convertJSONDateToPOJOClasses(convertDataToPOJOClassesEvent.getJsonString());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onDataHasBeenConvertedToPOJOsEvent(DataHasBeenConvertedToPOJOsEvent dataHasBeenConvertedToPOJOsEvent){
+        Log.i(TAG, "onDataHasBeenConvertedToPOJOsEvent");
+        ArrayList<Chord> chords = dataHasBeenConvertedToPOJOsEvent.getChords();
+
+        if(chords != null){
+
+            if(chords.size() > 0){
+
+                Log.i(TAG, "chords.size(): " + chords.size());
+            }
+        }
+    }
+
+    private AppDataManager getAppDataManager() {
+        return mAppDataManager;
     }
 }

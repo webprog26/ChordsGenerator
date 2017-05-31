@@ -2,6 +2,7 @@ package com.androiddeveloper.webprog26.ghordsgenerator.engine.managers;
 
 import android.content.res.AssetManager;
 
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.commands.ConvertDataToPOJOClassesCommand;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.commands.ReadJSONDataCommand;
 
 /**
@@ -21,6 +22,10 @@ public class AppDataManager {
      */
     public void readJSONData(){
         new ReadJSONDataCommand(getAssetManager()).execute();
+    }
+
+    public void convertJSONDateToPOJOClasses(String jsonString){
+        new ConvertDataToPOJOClassesCommand(jsonString).execute();
     }
 
     private AssetManager getAssetManager() {

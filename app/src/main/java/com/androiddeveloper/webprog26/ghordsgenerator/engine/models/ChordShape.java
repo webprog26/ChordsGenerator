@@ -14,6 +14,7 @@ public class ChordShape {
     private final int mStartFretPosition;
     private final String mImageTitle;
     private final ArrayList<Note> mNotes;
+    private final boolean mHasMutedStrings;
     private final MutedStringsHolder mMutedStringsHolder;
     private final boolean mHasBar;
     private final int mStartBarPlace;
@@ -23,6 +24,7 @@ public class ChordShape {
                       int startFretPosition,
                       String imageTitle,
                       ArrayList<Note> notes,
+                      boolean hasMutedStrings,
                       MutedStringsHolder mutedStringsHolder,
                       boolean hasBar,
                       int startBarPlace,
@@ -31,6 +33,7 @@ public class ChordShape {
         this.mStartFretPosition = startFretPosition;
         this.mImageTitle = imageTitle;
         this.mNotes = notes;
+        this.mHasMutedStrings = hasMutedStrings;
         this.mMutedStringsHolder = mutedStringsHolder;
         this.mHasBar = hasBar;
         this.mStartBarPlace = startBarPlace;
@@ -51,6 +54,10 @@ public class ChordShape {
 
     public ArrayList<Note> getNotes() {
         return mNotes;
+    }
+
+    public boolean isHasMutedStrings() {
+        return mHasMutedStrings;
     }
 
     public MutedStringsHolder getMutedStringsHolder() {

@@ -118,7 +118,7 @@
             {
               "note_title":"g",
               "note_fret":1,
-              "finger_index":1,
+              "note_finger_index":1,
               "note_place":20,
               "note_sound_path":"c/maj/ordinary/sounds/g_3_0.wav"
             },
