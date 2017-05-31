@@ -1,5 +1,6 @@
 package com.androiddeveloper.webprog26.ghordsgenerator;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -183,6 +184,10 @@ public class StartActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onChordsUploadedToDatabaseEvent(ChordsUploadedToDatabaseEvent chordsUploadedToDatabaseEvent){
+
+        //Todo uncomment the following line of code
+//        getSharedPreferences().edit().putBoolean(IS_JSON_HAS_BEEN_READ_TAG, true).apply();
+
         Button btnGo = getBtnGo();
         LinearLayout llLoading = getLlLoading();
         ProgressBar pbLoading = getPbLoading();
@@ -201,6 +206,13 @@ public class StartActivity extends AppCompatActivity {
         if(!btnGo.isEnabled()){
 
             btnGo.setEnabled(true);
+            btnGo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(StartActivity.this, MainActivity.class));
+                    finish();
+                }
+            });
         }
     }
 

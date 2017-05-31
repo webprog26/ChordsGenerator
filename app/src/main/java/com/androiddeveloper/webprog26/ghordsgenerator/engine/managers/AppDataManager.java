@@ -17,7 +17,7 @@ public class AppDataManager {
 
     private final AssetManager mAssetManager;
 
-    private int mChordsCount = -1;
+    private int mChordsCount = 0;
     private int mChordsLoadedCount = 0;
 
     public AppDataManager(AssetManager assetManager) {
