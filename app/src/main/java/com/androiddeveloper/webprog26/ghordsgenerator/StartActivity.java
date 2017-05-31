@@ -5,13 +5,21 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.AddChordsToLocalDbEvent;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.ChordsUploadedToDatabaseEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.ConvertDataToPOJOClassesEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.DataHasBeenConvertedToPOJOsEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.JSONDataHasBeenReadEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.ReadJSONDataEvent;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.SingleChordLoadedToLocalDBEvent;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.ShapeTableNameHelper;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.AppDataManager;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord;
 
@@ -33,11 +41,21 @@ public class StartActivity extends AppCompatActivity {
     @BindView(R.id.iv_app_logo)
     ImageView mIvAppLogo;
 
+    @BindView(R.id.ll_loading)
+    LinearLayout mLlLoading;
+
+    @BindView(R.id.tv_loading)
+    TextView mTvLoading;
+
+    @BindView(R.id.pb_loading)
+    ProgressBar mPbLoading;
+
     @BindView(R.id.btn_go)
     Button mBtnGo;
 
     private SharedPreferences mSharedPreferences;
     private AppDataManager mAppDataManager;
+    private ShapeTableNameHelper mShapeTableNameHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +64,7 @@ public class StartActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mAppDataManager = new AppDataManager(getAssets());
+        mShapeTableNameHelper = new ShapeTableNameHelper(getResources());
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     }
@@ -68,6 +87,12 @@ public class StartActivity extends AppCompatActivity {
 
             if(!sharedPreferences.getBoolean(IS_JSON_HAS_BEEN_READ_TAG, false)){
 
+                LinearLayout llLoading = getLlLoading();
+
+                if(llLoading.getVisibility() == View.INVISIBLE){
+                    llLoading.setVisibility(View.VISIBLE);
+                }
+
                 EventBus.getDefault().post(new ReadJSONDataEvent());
 
             } else {
@@ -83,18 +108,6 @@ public class StartActivity extends AppCompatActivity {
     protected void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
-    }
-
-    private SharedPreferences getSharedPreferences() {
-        return mSharedPreferences;
-    }
-
-    private ImageView getIvAppLogo() {
-        return mIvAppLogo;
-    }
-
-    private Button getBtnGo() {
-        return mBtnGo;
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -126,14 +139,93 @@ public class StartActivity extends AppCompatActivity {
 
         if(chords != null){
 
-            if(chords.size() > 0){
+            int chordsSize = chords.size();
 
-                Log.i(TAG, "chords.size(): " + chords.size());
+            if(chordsSize > 0){
+
+                getAppDataManager().setChordsCount(chordsSize);
+                Log.i(TAG, "chordsSize: " + chordsSize);
+
+                getPbLoading().setMax(chordsSize);
+
+                for(Chord chord: chords){
+                    chord.setChordShapesTableName(getShapeTableNameHelper().getChordShapesTableName(chord.getChordTitle()));
+                }
+
+                EventBus.getDefault().post(new AddChordsToLocalDbEvent(chords));
             }
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onAddChordsToLocalDbEvent(AddChordsToLocalDbEvent addChordsToLocalDbEvent){
+        getAppDataManager().addChordsToLocalDB(addChordsToLocalDbEvent.getChords());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSingleChordLoadedToLocalDBEvent(SingleChordLoadedToLocalDBEvent singleChordLoadedToLocalDBEvent){
+        AppDataManager appDataManager = getAppDataManager();
+
+        appDataManager.setChordsLoadedCount(appDataManager.getChordsLoadedCount() + 1);
+
+        getTvLoading().setText(getString(R.string.loading_text, singleChordLoadedToLocalDBEvent.getChordTitle()));
+        getPbLoading().setProgress((appDataManager.getChordsLoadedCount() * 100) / appDataManager.getChordsCount());
+        Log.i(TAG, "getPbLoading().getProgress(): " + getPbLoading().getProgress());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onChordsUploadedToDatabaseEvent(ChordsUploadedToDatabaseEvent chordsUploadedToDatabaseEvent){
+        Button btnGo = getBtnGo();
+        LinearLayout llLoading = getLlLoading();
+        ProgressBar pbLoading = getPbLoading();
+
+        if(llLoading.getVisibility() == View.VISIBLE){
+
+            int totalChordsCount = getAppDataManager().getChordsCount();
+
+            if(pbLoading.getProgress() < totalChordsCount){
+                pbLoading.setProgress(totalChordsCount);
+            }
+
+            llLoading.setVisibility(View.INVISIBLE);
+        }
+
+        if(!btnGo.isEnabled()){
+
+            btnGo.setEnabled(true);
+        }
+    }
+
+
+    private SharedPreferences getSharedPreferences() {
+        return mSharedPreferences;
+    }
+
+    private LinearLayout getLlLoading() {
+        return mLlLoading;
+    }
+
+    private TextView getTvLoading() {
+        return mTvLoading;
+    }
+
+    private ProgressBar getPbLoading() {
+        return mPbLoading;
+    }
+
+    private ImageView getIvAppLogo() {
+        return mIvAppLogo;
+    }
+
+    private Button getBtnGo() {
+        return mBtnGo;
+    }
+
     private AppDataManager getAppDataManager() {
         return mAppDataManager;
+    }
+
+    private ShapeTableNameHelper getShapeTableNameHelper() {
+        return mShapeTableNameHelper;
     }
 }

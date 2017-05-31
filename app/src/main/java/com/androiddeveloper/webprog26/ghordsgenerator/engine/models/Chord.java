@@ -13,6 +13,7 @@ public class Chord {
     private final String mChordType;
     private final String mChordAlteration;
     private final ArrayList<ChordShape> mChordShapes;
+    private String mChordShapesTableName;
 
     public Chord(String chordTitle,
                  String chordSecondTitle,
@@ -44,5 +45,13 @@ public class Chord {
 
     public ArrayList<ChordShape> getChordShapes() {
         return mChordShapes;
+    }
+
+    public String getChordShapesTableName() {
+        return mChordShapesTableName;
+    }
+
+    public void setChordShapesTableName(String chordShapesTableName) {
+        this.mChordShapesTableName = chordShapesTableName;
     }
 }

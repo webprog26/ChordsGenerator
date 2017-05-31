@@ -8,17 +8,17 @@ import com.androiddeveloper.webprog26.ghordsgenerator.R;
  * Created by webpr on 31.05.2017.
  */
 
-public class ShapeTableTitleHelper {
+public class ShapeTableNameHelper {
 
     private final Resources mResources;
 
-    public ShapeTableTitleHelper(Resources resources) {
+    public ShapeTableNameHelper(Resources resources) {
         this.mResources = resources;
     }
 
     private static final String C_MAJ_ORDINARY = "C";
 
-    public String getChordShapesTableTitle(String chordTitle){
+    public String getChordShapesTableName(String chordTitle){
 
         final Resources resources = getResources();
 
