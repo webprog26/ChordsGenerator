@@ -6,6 +6,54 @@
 
     <string name="btn_go">Go</string>
 
+    <string name="build_your_chord">Build your chord</string>
+    <string name="wrong_chord">No %1$s chord. Switched to %2$s</string>
+    <string name="why">Why?</string>
+    <string name="reference">Reference</string>
+    <string name="reference_text">Reference for %1$s</string>
+
+    <string name="chord_with_one_title">Chord title: %1$s</string>
+    <string name="chord_with_two_titles">Chord title: %1$s (%2$s)</string>
+
+    <string name="btn_next">Next</string>
+    <string name="btn_previous">Prev</string>
+    <string name="starts_at_fret">Starts at fret</string>
+
+    <!--Chords titles-->
+    <string-array name="chords_titles">
+        <item>C</item>
+        <item>D</item>
+        <item>E</item>
+        <item>F</item>
+        <item>G</item>
+        <item>A</item>
+        <item>B</item>
+        <item>H</item>
+    </string-array>
+
+    <!--Chords types-->
+    <string-array name="chords_types">
+        <item>--</item>
+        <item>m</item>
+        <item>7</item>
+        <item>m7</item>
+        <item>5</item>
+        <item>6</item>
+        <item>m6</item>
+    </string-array>
+
+    <!--Chords params-->
+    <string-array name="chords_params">
+        <item>--</item>
+        <item>b</item>
+        <item>#</item>
+    </string-array>
+
+
+    <string name="param_sharp">#</string>
+    <string name="param_flat">b</string>
+
+
     <string name="c_maj_ordinary">c_maj_ordinary</string>
 
 

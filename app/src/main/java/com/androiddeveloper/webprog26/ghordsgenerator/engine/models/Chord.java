@@ -8,11 +8,14 @@ import java.util.ArrayList;
 
 public class Chord {
 
-    private final String mChordTitle;
-    private final String mChordSecondTitle;
-    private final String mChordType;
-    private final String mChordAlteration;
-    private final ArrayList<ChordShape> mChordShapes;
+    public static final String NO_TYPE = "no_type";
+    public static final String NO_ALTERATION = "no_alteration";
+
+    private String mChordTitle;
+    private String mChordSecondTitle;
+    private String mChordType;
+    private String mChordAlteration;
+    private ArrayList<ChordShape> mChordShapes;
     private String mChordShapesTableName;
 
     public Chord(String chordTitle,
@@ -25,6 +28,21 @@ public class Chord {
         this.mChordType = chordType;
         this.mChordAlteration = chordAlteration;
         this.mChordShapes = chordShapes;
+    }
+
+    public Chord() {
+    }
+
+    public void setChordTitle(String chordTitle) {
+        this.mChordTitle = chordTitle;
+    }
+
+    public void setChordType(String chordType) {
+        this.mChordType = chordType;
+    }
+
+    public void setChordAlteration(String chordAlteration) {
+        this.mChordAlteration = chordAlteration;
     }
 
     public String getChordTitle() {
