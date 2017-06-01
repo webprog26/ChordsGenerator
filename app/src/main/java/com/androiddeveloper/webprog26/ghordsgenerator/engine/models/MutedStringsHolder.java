@@ -1,10 +1,12 @@
 package com.androiddeveloper.webprog26.ghordsgenerator.engine.models;
 
+import java.io.Serializable;
+
 /**
  * Created by webpr on 31.05.2017.
  */
 
-public class MutedStringsHolder {
+public class MutedStringsHolder implements Serializable{
 
     private final boolean isFirstStringMuted;
     private final boolean isSecondStringMuted;

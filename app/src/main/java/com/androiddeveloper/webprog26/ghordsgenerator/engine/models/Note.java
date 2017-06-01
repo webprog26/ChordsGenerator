@@ -2,11 +2,13 @@ package com.androiddeveloper.webprog26.ghordsgenerator.engine.models;
 
 import android.graphics.drawable.Drawable;
 
+import java.io.Serializable;
+
 /**
  * Created by webpr on 31.05.2017.
  */
 
-public class Note {
+public class Note implements Serializable{
 
     private final String mNoteTitle;
     private final int mNoteFret;

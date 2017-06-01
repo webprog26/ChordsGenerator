@@ -12,6 +12,7 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.MainAppScr
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.SpinnerReseter;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.listeners.SpinnerListener;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordInfoHolder;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -82,11 +83,25 @@ public class MainActivity extends AppCompatActivity implements SpinnerReseter{
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onChordShapeImageClickEvent(ChordShapeImageClickEvent chordShapeImageClickEvent){
         Log.i(TAG, "onChordShapeImageClickEvent");
-        Intent playShapeIntent = new Intent(MainActivity.this, PlayShapeActivity.class);
-        playShapeIntent.putExtra(PlayShapeActivity.SHAPES_TABLE_NAME, new ShapeTableNameHelper(getResources())
-                .getChordShapesTableName(getMainAppScreenManager().getCurrentChord().getChordTitle()));
-        playShapeIntent.putExtra(PlayShapeActivity.CLICKED_SHAPE_POSITION, chordShapeImageClickEvent.getClickedShapePosition());
-        startActivity(playShapeIntent);
+        final MainAppScreenManager mainAppScreenManager = getMainAppScreenManager();
+
+        if(mainAppScreenManager != null){
+
+            String chordTitle = mainAppScreenManager.getCurrentChord().getChordTitle();
+
+            Intent playShapeIntent = new Intent(MainActivity.this, PlayShapeActivity.class);
+
+            playShapeIntent.putExtra(PlayShapeActivity.CHORD_INFO_HOLDER, new ChordInfoHolder(
+                    chordTitle,
+                    mainAppScreenManager.getChordSecondTitleHelper().getChordSecondTitle(chordTitle),
+                    chordShapeImageClickEvent.getClickedShapePosition(),
+                    mainAppScreenManager.getShapeTableNameHelper().getChordShapesTableName(chordTitle)
+            ));
+            startActivity(playShapeIntent);
+
+        }
+
+
     }
 
     @Override

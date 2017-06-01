@@ -1,12 +1,13 @@
 package com.androiddeveloper.webprog26.ghordsgenerator.engine.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by webpr on 31.05.2017.
  */
 
-public class ChordShape {
+public class ChordShape implements Serializable{
 
     public static final int NO_BAR_PLACE = -1;
 

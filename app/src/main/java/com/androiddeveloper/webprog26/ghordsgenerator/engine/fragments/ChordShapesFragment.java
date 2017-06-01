@@ -58,9 +58,11 @@ public class ChordShapesFragment extends Fragment {
 
         EventBus.getDefault().register(this);
 
-        if(getArguments() != null){
+        Bundle args = getArguments();
 
-            final String chordShapesTableName = getArguments().getString(CHORD_SHAPES_TABLE_NAME);
+        if(args != null){
+
+            final String chordShapesTableName = args.getString(CHORD_SHAPES_TABLE_NAME);
 
             if(chordShapesTableName != null){
 
