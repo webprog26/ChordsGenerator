@@ -4,7 +4,9 @@ import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.commands.LoadChordShapesFragmentCommand;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.fragments.dialogs.ReferenceDialog;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.ShapeTableNameHelper;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.UIMessageHelper;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord;
 
@@ -20,6 +22,7 @@ public class MainAppScreenManager {
     private final int containerViewId;
     private final Context mContext;
     private final UIMessageHelper mUiMessageHelper;
+    private final ShapeTableNameHelper mShapeTableNameHelper;
 
 
     private Chord mCurrentChord;
@@ -31,6 +34,7 @@ public class MainAppScreenManager {
         this.mContext = context;
 
         this.mUiMessageHelper = new UIMessageHelper(this);
+        this.mShapeTableNameHelper = new ShapeTableNameHelper(context.getResources());
     }
 
     public void sendUiMessage(final Chord chord, final String toChord){
@@ -38,6 +42,9 @@ public class MainAppScreenManager {
     }
 
     public void setFragmentWithListOfChordImages(final Chord chord){
+        new LoadChordShapesFragmentCommand(getFragmentManager(),
+                                           getContainerViewId(),
+                                           getShapeTableNameHelper().getChordShapesTableName(chord.getChordTitle())).execute();
         Log.i(TAG, "should load chord " + chord.getChordTitle());
     }
 
@@ -47,7 +54,7 @@ public class MainAppScreenManager {
     }
 
 
-    public FragmentManager getFragmentManager() {
+    private FragmentManager getFragmentManager() {
         return mFragmentManager;
     }
 
@@ -69,5 +76,9 @@ public class MainAppScreenManager {
 
     public UIMessageHelper getUiMessageHelper() {
         return mUiMessageHelper;
+    }
+
+    public ShapeTableNameHelper getShapeTableNameHelper() {
+        return mShapeTableNameHelper;
     }
 }
