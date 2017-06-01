@@ -89,7 +89,10 @@ public class ChordShapesFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ChordShapesFragmentManager chordShapesFragmentManager = getChordShapesFragmentManager();
-        chordShapesFragmentManager.loadShapesBitmaps();
+
+        if(chordShapesFragmentManager != null){
+            chordShapesFragmentManager.loadShapesBitmaps();
+        }
     }
 
     @Override

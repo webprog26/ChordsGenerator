@@ -2,12 +2,10 @@ package com.androiddeveloper.webprog26.ghordsgenerator.engine.managers;
 
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.BitmapsArrayLoadedEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.LoadChordShapesBitmapsEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.LoadBitmapsFromAssetsHelper;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -22,20 +20,24 @@ public class ChordShapesFragmentManager {
     private static final String TAG = "ChordManager";
 
     private ArrayList<Bitmap> mChordShapesBitmaps = new ArrayList<>();
-    private final String mChordShapesTableTitle;
+    private final String mChordShapesTableName;
     private final AssetManager mAssetManager;
 
     public ChordShapesFragmentManager(String chordShapesTableTitle, AssetManager assetManager) {
-        this.mChordShapesTableTitle = chordShapesTableTitle;
+        this.mChordShapesTableName = chordShapesTableTitle;
         this.mAssetManager = assetManager;
     }
 
     public void loadShapesBitmaps(){
-        EventBus.getDefault().post(new LoadChordShapesBitmapsEvent(getChordShapesTableTitle()));
+        String chordShapesTableName = getChordShapesTableName();
+
+        if(chordShapesTableName != null){
+            EventBus.getDefault().post(new LoadChordShapesBitmapsEvent(chordShapesTableName));
+        }
     }
 
-    private String getChordShapesTableTitle() {
-        return mChordShapesTableTitle;
+    private String getChordShapesTableName() {
+        return mChordShapesTableName;
     }
 
     public void addShapesBitmapsToList(ArrayList<String> bitmapsPathList){
