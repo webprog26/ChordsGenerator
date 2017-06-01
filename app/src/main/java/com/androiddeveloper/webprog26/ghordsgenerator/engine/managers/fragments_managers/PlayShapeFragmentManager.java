@@ -1,5 +1,7 @@
 package com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.fragments_managers;
 
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -16,6 +18,7 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Note;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -29,15 +32,17 @@ public class PlayShapeFragmentManager {
     private final ChordShape mChordShape;
     private final Fretboard mFretboard;
     private final Resources mResources;
+    private final AssetManager mAssetManager;
 
     private SoundPool mSoundPool;
     private boolean shouldDrawBar = false;
     private int barStartPlace = ChordShape.NO_BAR_PLACE;
     private int barEndPlace = ChordShape.NO_BAR_PLACE;
 
-    public PlayShapeFragmentManager(ChordShape chordShape, Resources resources) {
+    public PlayShapeFragmentManager(ChordShape chordShape, Resources resources, AssetManager assetManager) {
         this.mChordShape = chordShape;
         this.mResources = resources;
+        this.mAssetManager = assetManager;
         this.mFretboard = new Fretboard(chordShape.getMutedStringsHolder());
 
         initBarPlaces();
@@ -74,15 +79,18 @@ public class PlayShapeFragmentManager {
                     Resources resources = getResources();
 
                     for(Note note: notes){
-                        Log.i(TAG, "finger index " + note.getNoteFingerIndex());
 
-                        if(note.getNoteFingerIndex() != 0){
+                        if(note != null){
+                            Log.i(TAG, "finger index " + note.getNoteFingerIndex());
 
-                            note.setNoteTitleDrawable(resources.getDrawable(NoteBitmapsHelper.getNoteDrawable(note.getNoteTitle())));
-                            note.setNoteFingerIndexDrawable(resources.getDrawable(FingerIndexDrawableIDHelper.getFingerIndexDrawableId(note.getNoteFingerIndex())));
+                            if(note.getNoteFingerIndex() != 0){
 
+                                note.setNoteTitleDrawable(resources.getDrawable(NoteBitmapsHelper.getNoteDrawable(note.getNoteTitle())));
+                                note.setNoteFingerIndexDrawable(resources.getDrawable(FingerIndexDrawableIDHelper.getFingerIndexDrawableId(note.getNoteFingerIndex())));
+
+                            }
+                            initNoteWithSound(note);
                         }
-
                     }
                 }
             }
@@ -106,15 +114,27 @@ public class PlayShapeFragmentManager {
                 if(notes.size() > 0){
 
                     for(Note note: notes){
-                        Log.i(TAG, "finger index " + note.getNoteFingerIndex());
 
-                        if(note.getNoteFingerIndex() != 0){
+                        if(note != null){
 
-                            note.setNoteTitleDrawable(null);
-                            note.setNoteFingerIndexDrawable(null);
+                            Log.i(TAG, "finger index " + note.getNoteFingerIndex());
 
+                            if(note.getNoteFingerIndex() != 0){
+
+                                if(note.getNoteTitleDrawable() != null){
+
+                                    note.setNoteTitleDrawable(null);
+
+                                }
+
+                                if(note.getNoteFingerIndexDrawable() != null){
+                                    note.setNoteFingerIndexDrawable(null);
+                                }
+                            }
+
+
+                            removeSoundFromNote(note);
                         }
-
                     }
                 }
             }
@@ -136,7 +156,7 @@ public class PlayShapeFragmentManager {
 
                 Fretboard fretboard = getFretboard();
 
-                for(int i = 0; i < Fretboard.STRINGS_COUNT; i++){
+                for(int i = 0; i < notes.size(); i++){
 
                     GuitarString guitarString = fretboard.getGuitarString(i);
 
@@ -145,6 +165,19 @@ public class PlayShapeFragmentManager {
                         guitarString.setNote(notes.get(i));
                     }
                 }
+            }
+
+        }
+    }
+
+    private void removeSoundFromNote(Note note){
+
+        if(note != null){
+
+            if(note.getNoteSound() != Note.NO_SOUND){
+
+                note.setNoteSound(Note.NO_SOUND);
+
             }
 
         }
@@ -189,8 +222,42 @@ public class PlayShapeFragmentManager {
         SoundPool soundPool = getSoundPool();
         if(soundPool == null){
             setSoundPool(new SoundPool(10, AudioManager.STREAM_MUSIC,0));
-//            EventBus.getDefault().post(new LoadNotesSoundsEvent());
         }
+    }
+
+    private void initNoteWithSound(Note note){
+
+        if(note != null){
+
+            SoundPool soundPool = getSoundPool();
+
+            if(soundPool != null){
+
+                try {
+                    AssetManager assetManager = getAssetManager();
+
+                    if(assetManager != null){
+
+                        AssetFileDescriptor descriptor;
+
+                        String noteSoundPath = note.getNoteSoundPath();
+
+                        if(noteSoundPath != null){
+
+                            descriptor = assetManager.openFd(noteSoundPath);
+                            note.setNoteSound(soundPool.load(descriptor, 0));
+                        }
+                    }
+
+                } catch (IOException ioe){
+                    ioe.printStackTrace();
+                }
+
+            }
+        }
+
+
+
     }
 
     public void setStringsCoordinates(float startX, float endX, int index){
@@ -208,11 +275,11 @@ public class PlayShapeFragmentManager {
         return mFretboard;
     }
 
-    public SoundPool getSoundPool() {
+    private SoundPool getSoundPool() {
         return mSoundPool;
     }
 
-    public void setSoundPool(SoundPool soundPool) {
+    private void setSoundPool(SoundPool soundPool) {
         this.mSoundPool = soundPool;
     }
 
@@ -220,7 +287,7 @@ public class PlayShapeFragmentManager {
         return barStartPlace;
     }
 
-    public void setBarStartPlace(int barStartPlace) {
+    private void setBarStartPlace(int barStartPlace) {
         this.barStartPlace = barStartPlace;
     }
 
@@ -228,7 +295,7 @@ public class PlayShapeFragmentManager {
         return shouldDrawBar;
     }
 
-    public void setShouldDrawBar(boolean shouldDrawBar) {
+    private void setShouldDrawBar(boolean shouldDrawBar) {
         this.shouldDrawBar = shouldDrawBar;
     }
 
@@ -236,11 +303,15 @@ public class PlayShapeFragmentManager {
         return barEndPlace;
     }
 
-    public void setBarEndPlace(int barEndPlace) {
+    private void setBarEndPlace(int barEndPlace) {
         this.barEndPlace = barEndPlace;
     }
 
-    public Resources getResources() {
+    private Resources getResources() {
         return mResources;
+    }
+
+    private AssetManager getAssetManager() {
+        return mAssetManager;
     }
 }

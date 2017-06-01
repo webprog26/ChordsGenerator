@@ -56,7 +56,9 @@ public class PlayShapesFragment extends Fragment {
 
             if(chordShape != null){
 
-                mPlayShapeFragmentManager = new PlayShapeFragmentManager(chordShape, getActivity().getResources());
+                mPlayShapeFragmentManager = new PlayShapeFragmentManager(chordShape, getActivity().getResources(), getActivity().getAssets());
+                mPlayShapeFragmentManager.createSoundPool();
+
                 mPlayShapeFragmentManager.initNotesWithDrawables();
                 Log.i(TAG, "in PlayShapesFragment chord shape is " + chordShape.toString());
             }
@@ -67,7 +69,9 @@ public class PlayShapesFragment extends Fragment {
     public void onPause() {
         PlayShapeFragmentManager playShapeFragmentManager = getPlayShapeFragmentManager();
         if(playShapeFragmentManager != null){
+            playShapeFragmentManager.releaseSoundPool();
             playShapeFragmentManager.removeDrawablesFromNotes();
+
         }
         super.onPause();
     }
@@ -111,17 +115,29 @@ public class PlayShapesFragment extends Fragment {
                         if(note.getNoteTitleDrawable() != null){
 
                             Log.i(TAG, "note.getNoteTitleDrawable(): " + note.getNoteTitleDrawable().toString());
+                        } else {
+                            Log.i(TAG, "note.getNoteTitleDrawable(): null");
                         }
 
                         if(note.getNoteFingerIndexDrawable() != null){
 
                             Log.i(TAG, "note.getNoteFingerIndexDrawable().toString(): " + note.getNoteFingerIndexDrawable().toString());
+                        } else {
+                            Log.i(TAG, "note.getNoteFingerIndexDrawable(): null");
                         }
 
+                        if(note.getNoteSound() != Note.NO_SOUND){
+                            Log.i(TAG, "note.getNoteSound(): " + note.getNoteSound());
+                        } else {
+                            Log.i(TAG, "note got no sound");
+                        }
+                    } else {
+                        Log.i(TAG, "note is null");
                     }
                 }
             }
 
         }
+        //Todo load sound to every note
     }
 }

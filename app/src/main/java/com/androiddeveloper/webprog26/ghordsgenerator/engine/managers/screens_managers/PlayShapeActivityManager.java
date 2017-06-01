@@ -83,6 +83,7 @@ public class PlayShapeActivityManager extends ScreenManager{
     }
 
     public void loadChordShapesFromLocalDB(){
+        Log.i(TAG, "loadChordShapesFromLocalDB");
         EventBus.getDefault().post(new LoadChordShapesFromLocalDBEvent());
     }
 

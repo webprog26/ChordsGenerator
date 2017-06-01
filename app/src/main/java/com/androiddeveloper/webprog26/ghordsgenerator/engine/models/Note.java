@@ -10,6 +10,8 @@ import java.io.Serializable;
 
 public class Note implements Serializable{
 
+    public static final int NO_SOUND = -1;
+
     private final String mNoteTitle;
     private final int mNoteFret;
     private final int mNoteFingerIndex;
@@ -18,6 +20,7 @@ public class Note implements Serializable{
 
     private Drawable mNoteTitleDrawable;
     private Drawable mNoteFingerIndexDrawable;
+    private int mNoteSound = NO_SOUND;
 
     public Note(String noteTitle,
                 int noteFret,
@@ -65,5 +68,13 @@ public class Note implements Serializable{
 
     public void setNoteFingerIndexDrawable(Drawable noteFingerIndexDrawable) {
         this.mNoteFingerIndexDrawable = noteFingerIndexDrawable;
+    }
+
+    public int getNoteSound() {
+        return mNoteSound;
+    }
+
+    public void setNoteSound(int noteSound) {
+        this.mNoteSound = noteSound;
     }
 }

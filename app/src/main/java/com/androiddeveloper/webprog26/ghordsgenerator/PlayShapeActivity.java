@@ -64,6 +64,14 @@ public class PlayShapeActivity extends AppCompatActivity implements PlayShapeAct
                         + chordInfoHolder.getChordShapesTableName());
 
                 mShapesControlButtonsListener = new ShapesControlButtonsListener(mPlayShapeActivityManager);
+
+                getTvChordTitle()
+                        .setText(chordInfoHolder.getChordSecondTitle() == null
+                                ? getString(R.string.chord_with_one_title, chordInfoHolder.getChordTitle()) :
+                                getString(R.string.chord_with_two_titles,
+                                        chordInfoHolder.getChordTitle(),
+                                        chordInfoHolder.getChordSecondTitle()));
+
             }
         }
 
