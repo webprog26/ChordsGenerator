@@ -44,6 +44,7 @@ public class PlayShapeActivity extends AppCompatActivity implements PlayShapeAct
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_shape);
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
 
         Intent receivedIntent = getIntent();
 
@@ -68,13 +69,15 @@ public class PlayShapeActivity extends AppCompatActivity implements PlayShapeAct
 
         getBtnNext().setOnClickListener(mShapesControlButtonsListener);
         getBtnPrevious().setOnClickListener(mShapesControlButtonsListener);
+
+        mPlayShapeActivityManager.loadChordShapesFromLocalDB();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        EventBus.getDefault().register(this);
+//    }
 
     @Override
     protected void onResume() {
@@ -84,14 +87,20 @@ public class PlayShapeActivity extends AppCompatActivity implements PlayShapeAct
 
         if(playShapeActivityManager != null){
 
-            playShapeActivityManager.loadChordShapesFromLocalDB();
+//            playShapeActivityManager.loadChordShapesFromLocalDB();
         }
     }
 
+//    @Override
+//    protected void onStop() {
+//        EventBus.getDefault().unregister(this);
+//        super.onStop();
+//    }
+
     @Override
-    protected void onStop() {
+    protected void onDestroy() {
         EventBus.getDefault().unregister(this);
-        super.onStop();
+        super.onDestroy();
     }
 
     private PlayShapeActivityManager getPlayShapeActivityManager() {

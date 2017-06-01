@@ -42,12 +42,14 @@ public class PlayShapeActivityManager extends ScreenManager{
 
     @Override
     public void setPlayableShapeFragment() {
-        final ChordShape chordShape = getChordShapes().get(getCurrentShapePosition());
+        if(getChordShapes().size() > 0){
+            final ChordShape chordShape = getChordShapes().get(getCurrentShapePosition());
 
-        if(chordShape != null){
-            new LoadPlayShapeFragmentCommand(getFragmentManager(), getContainerViewId(), chordShape).execute();
+            if(chordShape != null){
+                new LoadPlayShapeFragmentCommand(getFragmentManager(), getContainerViewId(), chordShape).execute();
+            }
+            Log.i(TAG, "load Fragment with shape " + getChordShapes().get(getCurrentShapePosition()));
         }
-        Log.i(TAG, "load Fragment with shape " + getChordShapes().get(getCurrentShapePosition()));
     }
 
     public void setNextPlayableShape(){
