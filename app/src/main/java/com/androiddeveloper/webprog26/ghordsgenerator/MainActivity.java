@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatSpinner;
+import android.util.Log;
 
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.ChordShapeImageClickEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.ShapeTableNameHelper;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.MainAppScreenManager;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord;
@@ -61,26 +63,29 @@ public class MainActivity extends AppCompatActivity implements SpinnerReseter{
         chord.setChordType(Chord.NO_TYPE);
         chord.setChordAlteration(Chord.NO_ALTERATION);
 
+        mainAppScreenManager.setCurrentChord(chord);
         mainAppScreenManager.setFragmentWithListOfChordImages(chord);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-//        EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onStop() {
-//        EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this);
         super.onStop();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onOnShapeImageClickedEvent(){
+    public void onChordShapeImageClickEvent(ChordShapeImageClickEvent chordShapeImageClickEvent){
+        Log.i(TAG, "onChordShapeImageClickEvent");
         Intent playShapeIntent = new Intent(MainActivity.this, PlayShapeActivity.class);
-        playShapeIntent.putExtra(PlayShapeActivity.SHAPES_TABLE_TITLE, new ShapeTableNameHelper(getResources())
+        playShapeIntent.putExtra(PlayShapeActivity.SHAPES_TABLE_NAME, new ShapeTableNameHelper(getResources())
                 .getChordShapesTableName(getMainAppScreenManager().getCurrentChord().getChordTitle()));
+        playShapeIntent.putExtra(PlayShapeActivity.CLICKED_SHAPE_POSITION, chordShapeImageClickEvent.getClickedShapePosition());
         startActivity(playShapeIntent);
     }
 

@@ -12,8 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.androiddeveloper.webprog26.ghordsgenerator.R;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.adapters.ChordShapesAdapter;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.chords_generator_app.ChordsGeneratorApp;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.BitmapsArrayLoadedEvent;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.LoadChordShapesBitmapsEvent;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.ChordShapesFragmentManager;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,6 +39,8 @@ public class ChordShapesFragment extends Fragment {
     @BindView(R.id.rv_chord_images)
     RecyclerView mRvChordImages;
 
+    private ChordShapesFragmentManager mChordShapesFragmentManager;
+    private ChordShapesAdapter mChordShapesAdapter;
     private Unbinder unbinder;
 
     public static ChordShapesFragment newInstance(String chordShapesTableName){
@@ -47,13 +56,17 @@ public class ChordShapesFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
 
         if(getArguments() != null){
 
             final String chordShapesTableName = getArguments().getString(CHORD_SHAPES_TABLE_NAME);
 
             if(chordShapesTableName != null){
+
+                mChordShapesFragmentManager = new ChordShapesFragmentManager(chordShapesTableName, getActivity().getAssets());
+
+                mChordShapesAdapter = new ChordShapesAdapter(mChordShapesFragmentManager.getChordShapesBitmaps(), getActivity());
 
                 Log.i(TAG, "chordShapesTableName: " + chordShapesTableName);
             }
@@ -67,9 +80,16 @@ public class ChordShapesFragment extends Fragment {
         View view = inflater.inflate(R.layout.chord_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         //Initialing RecyclerView
-//        initImagesRecyclerView();
+        initImagesRecyclerView();
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ChordShapesFragmentManager chordShapesFragmentManager = getChordShapesFragmentManager();
+        chordShapesFragmentManager.loadShapesBitmaps();
     }
 
     @Override
@@ -82,24 +102,45 @@ public class ChordShapesFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this);
         Log.i(TAG, "onDestroy");
     }
 
-//    /**
-//     * Initializes chord images {@link RecyclerView} with necessary params
-//     */
-//    private void initImagesRecyclerView(){
-//        RecyclerView rvChordImages = getRvChordImages();
-//        rvChordImages.setHasFixedSize(true);
-//        rvChordImages.setItemAnimator(new DefaultItemAnimator());
-//        rvChordImages.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        rvChordImages.setAdapter(getChordsShapesAdapter());
-//    }
+    /**
+     * Initializes chord images {@link RecyclerView} with necessary params
+     */
+    private void initImagesRecyclerView(){
+        RecyclerView rvChordImages = getRvChordImages();
+        rvChordImages.setHasFixedSize(true);
+        rvChordImages.setItemAnimator(new DefaultItemAnimator());
+        rvChordImages.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rvChordImages.setAdapter(getChordShapesAdapter());
+    }
 
 
     private RecyclerView getRvChordImages() {
         return mRvChordImages;
     }
 
+    private ChordShapesFragmentManager getChordShapesFragmentManager() {
+        return mChordShapesFragmentManager;
+    }
+
+    private ChordShapesAdapter getChordShapesAdapter() {
+        return mChordShapesAdapter;
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onLoadChordShapesBitmapsEvent(LoadChordShapesBitmapsEvent loadChordShapesBitmapsEvent){
+        getChordShapesFragmentManager()
+                .addShapesBitmapsToList(ChordsGeneratorApp
+                                        .getChordsDBProvider()
+                                        .getChordShapesBitmapsPath(loadChordShapesBitmapsEvent
+                                                                   .getChordShapesTableName()));
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onBitmapsArrayLoadedEvent(BitmapsArrayLoadedEvent bitmapsArrayLoadedEvent){
+        getChordShapesAdapter().updateAdapterData(bitmapsArrayLoadedEvent.getBitmaps());
+    }
 }

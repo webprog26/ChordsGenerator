@@ -68,6 +68,14 @@ public class StartActivity extends AppCompatActivity {
         mShapeTableNameHelper = new ShapeTableNameHelper(getResources());
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        getBtnGo().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(StartActivity.this, MainActivity.class));
+                finish();
+            }
+        });
     }
 
     @Override
@@ -185,8 +193,7 @@ public class StartActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onChordsUploadedToDatabaseEvent(ChordsUploadedToDatabaseEvent chordsUploadedToDatabaseEvent){
 
-        //Todo uncomment the following line of code
-//        getSharedPreferences().edit().putBoolean(IS_JSON_HAS_BEEN_READ_TAG, true).apply();
+        getSharedPreferences().edit().putBoolean(IS_JSON_HAS_BEEN_READ_TAG, true).apply();
 
         Button btnGo = getBtnGo();
         LinearLayout llLoading = getLlLoading();
@@ -206,13 +213,6 @@ public class StartActivity extends AppCompatActivity {
         if(!btnGo.isEnabled()){
 
             btnGo.setEnabled(true);
-            btnGo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(StartActivity.this, MainActivity.class));
-                    finish();
-                }
-            });
         }
     }
 

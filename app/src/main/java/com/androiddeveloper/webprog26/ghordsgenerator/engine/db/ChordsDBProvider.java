@@ -2,6 +2,8 @@ package com.androiddeveloper.webprog26.ghordsgenerator.engine.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.graphics.Point;
 import android.util.Log;
 
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.ChordsUploadedToDatabaseEvent;
@@ -164,4 +166,180 @@ public class ChordsDBProvider {
 
         return json.toString();
     }
+
+    /**
+     * Returns {@link ArrayList} of {@link ChordShape} instances
+     * stored in local to local {@link android.database.sqlite.SQLiteDatabase}
+     * @param chordShapesTableTitle {@link String}
+     * @return ArrayList
+     */
+    public ArrayList<ChordShape> getChordShapes(final String chordShapesTableTitle){
+        Log.i(TAG, "getChordShapes ");
+
+        ArrayList<ChordShape> chordShapes = new ArrayList<>();
+        ChordShape chordShape;
+
+        Cursor cursor = getChordsDBHelper().getReadableDatabase().query(chordShapesTableTitle,
+                null,
+                null,
+                null,
+                null,
+                null,
+                ChordsDBHelper.SHAPE_ID);
+        while(cursor.moveToNext()){
+            boolean hasBar = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(ChordsDBHelper.SHAPE_HAS_BAR)));
+            int shapePosition = cursor.getInt(cursor.getColumnIndex(ChordsDBHelper.SHAPE_POSITION));
+            int startFretPosition = cursor.getInt(cursor.getColumnIndex(ChordsDBHelper.SHAPE_START_FRET_POSITON));
+
+
+            String imageTitle = cursor.getString(cursor.getColumnIndex(ChordsDBHelper.SHAPE_IMAGE_TITLE));
+
+            boolean hasMutedStrings = getBoolean(cursor.getString(cursor.getColumnIndex(ChordsDBHelper.SHAPE_HAS_MUTED_STRINGS)));
+
+            int barStartPlace = cursor.getInt(cursor.getColumnIndex(ChordsDBHelper.SHAPE_BAR_START_PLACE));
+            int barEndPlace = cursor.getInt(cursor.getColumnIndex(ChordsDBHelper.SHAPE_BAR_END_PLACE));
+
+            chordShape = new ChordShape(shapePosition,
+                                        startFretPosition,
+                                        imageTitle,
+                                        getNotes(chordShapesTableTitle, shapePosition),
+                                        hasMutedStrings,
+                                        getMutedStringsHolder(cursor),
+                                        hasBar,
+                                        barStartPlace,
+                                        barEndPlace
+
+            );
+
+            chordShapes.add(chordShape);
+        }
+        cursor.close();
+        return chordShapes;
+    }
+
+    private MutedStringsHolder getMutedStringsHolder(Cursor cursor){
+        return new MutedStringsHolder(
+                getBoolean(cursor.getString(cursor.getColumnIndex(ChordsDBHelper.SHAPE_FIRST_STRING_MUTED))),
+                getBoolean(cursor.getString(cursor.getColumnIndex(ChordsDBHelper.SHAPE_SECOND_STRING_MUTED))),
+                getBoolean(cursor.getString(cursor.getColumnIndex(ChordsDBHelper.SHAPE_THIRD_STRING_MUTED))),
+                getBoolean(cursor.getString(cursor.getColumnIndex(ChordsDBHelper.SHAPE_FOURTH_STRING_MUTED))),
+                getBoolean(cursor.getString(cursor.getColumnIndex(ChordsDBHelper.SHAPE_FIFTH_STRING_MUTED))),
+                getBoolean(cursor.getString(cursor.getColumnIndex(ChordsDBHelper.SHAPE_SIXTH_STRING_MUTED)))
+        );
+    }
+
+    /**
+     * Transorms {@link String} value from {@link android.database.sqlite.SQLiteDatabase} to boolean
+     * @param s {@link String}
+     * @return boolean
+     */
+    private boolean getBoolean(String s){
+        return Boolean.parseBoolean(s);
+    }
+
+    /**
+     * Returns {@link ArrayList} of {@link ChordShape} {@link Note} instances
+     * @param tableTitle {@link String}
+     * @param shapePosition int
+     * @return ArrayList
+     */
+    private ArrayList<Note> getNotes(String tableTitle, int shapePosition){
+        ArrayList<Note> notes = new ArrayList<>();
+
+        String whereClause = ChordsDBHelper.SHAPE_POSITION + " = ?";
+        String[] whereArgs = new String[]{String.valueOf(shapePosition)};
+
+        Cursor cursor = getChordsDBHelper().getReadableDatabase().query(tableTitle,
+                null,
+                whereClause,
+                whereArgs,
+                null,
+                null,
+                null);
+
+        while(cursor.moveToNext()){
+            JSONObject jsonNotes = getJSONNotesObject(cursor.getString(cursor.getColumnIndex(ChordsDBHelper.SHAPE_NOTES)));
+
+            if(jsonNotes != null){
+                Log.i(TAG, jsonNotes.toString());
+                JSONArray jsonArray = jsonNotes.optJSONArray(SHAPE_NOTES);
+                for(int i = 0; i < jsonArray.length(); i++){
+                    Note note = null;
+                    JSONObject arrayObject = null;
+
+                    try {
+                        arrayObject = jsonArray.getJSONObject(i);
+                    } catch (JSONException e){
+                        e.printStackTrace();
+                    }
+
+                    if(arrayObject != null){
+                        note = getNoteFromJSONObject(arrayObject);
+                    }
+
+
+                    if(note != null){
+                        notes.add(note);
+                    }
+                }
+            }
+        }
+        cursor.close();
+        for(Note note: notes){
+            Log.i(TAG, "getNote " + note);
+        }
+        return notes;
+    }
+
+    private Note getNoteFromJSONObject(JSONObject noteJsonObject){
+        Note note = null;
+        if(noteJsonObject != null){
+            try {
+                note = new Note(
+                        noteJsonObject.getString(SHAPE_NOTE_TITLE),
+                        noteJsonObject.getInt(SHAPE_NOTE_FRET),
+                        noteJsonObject.getInt(SHAPE_NOTE_FINGER_INDEX),
+                        noteJsonObject.getInt(SHAPE_NOTE_PLACE),
+                        noteJsonObject.getString(SHAPE_NOTE_SOUND_PATH)
+                );
+            } catch (JSONException e){
+                e.printStackTrace();
+            }
+        }
+        return note;
+    }
+
+    private JSONObject getJSONNotesObject(String jsonNotesString){
+        JSONObject jsonNotes = null;
+        try {
+            jsonNotes = new JSONObject(jsonNotesString);
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+        return jsonNotes;
+    }
+
+    public ArrayList<String> getChordShapesBitmapsPath(final String chordShapesTableName){
+
+        ArrayList<String> chordShapesBitmapsPath = new ArrayList<>();
+
+        String chordShapeBitmapPath = null;
+
+        Cursor cursor = getChordsDBHelper().getReadableDatabase().query(chordShapesTableName,
+                new String[]{ChordsDBHelper.SHAPE_IMAGE_TITLE},
+                null,
+                null,
+                null,
+                null,
+                ChordsDBHelper.SHAPE_ID);
+
+        while (cursor.moveToNext()){
+            chordShapeBitmapPath = cursor.getString(cursor.getColumnIndex(ChordsDBHelper.SHAPE_IMAGE_TITLE));
+            chordShapesBitmapsPath.add(chordShapeBitmapPath);
+        }
+        cursor.close();
+
+        return chordShapesBitmapsPath;
+    }
+
 }
