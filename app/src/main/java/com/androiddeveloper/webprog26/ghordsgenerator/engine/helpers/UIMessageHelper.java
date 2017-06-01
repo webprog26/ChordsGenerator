@@ -6,7 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 
 import com.androiddeveloper.webprog26.ghordsgenerator.R;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.MainAppScreenManager;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.screens_managers.MainAppScreenManager;
 
 
 /**

@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import com.androiddeveloper.webprog26.ghordsgenerator.R;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.MainAppScreenManager;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.screens_managers.MainAppScreenManager;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.SpinnerReseter;
 

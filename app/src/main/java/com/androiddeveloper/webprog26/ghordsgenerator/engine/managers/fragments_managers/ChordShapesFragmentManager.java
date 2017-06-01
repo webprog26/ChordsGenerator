@@ -1,4 +1,4 @@
-package com.androiddeveloper.webprog26.ghordsgenerator.engine.managers;
+package com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.fragments_managers;
 
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;

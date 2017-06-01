@@ -12,7 +12,7 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.ChordShapesL
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.LoadChordShapesFromLocalDBEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.PlayShapeActivityControlsEnabler;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.listeners.ShapesControlButtonsListener;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.PlayShapeActivityManager;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.screens_managers.PlayShapeActivityManager;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordInfoHolder;
 
 import org.greenrobot.eventbus.EventBus;

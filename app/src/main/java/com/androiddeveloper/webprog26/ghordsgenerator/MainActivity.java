@@ -7,8 +7,7 @@ import android.support.v7.widget.AppCompatSpinner;
 import android.util.Log;
 
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.ChordShapeImageClickEvent;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.ShapeTableNameHelper;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.MainAppScreenManager;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.screens_managers.MainAppScreenManager;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.SpinnerReseter;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.listeners.SpinnerListener;

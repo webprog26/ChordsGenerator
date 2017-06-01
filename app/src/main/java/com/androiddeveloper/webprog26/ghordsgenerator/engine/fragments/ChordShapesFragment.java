@@ -16,7 +16,7 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.adapters.ChordShape
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.chords_generator_app.ChordsGeneratorApp;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.BitmapsArrayLoadedEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.LoadChordShapesBitmapsEvent;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.ChordShapesFragmentManager;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.fragments_managers.ChordShapesFragmentManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

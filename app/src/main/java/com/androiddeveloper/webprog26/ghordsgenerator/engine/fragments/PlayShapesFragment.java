@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.fragments_managers.PlayShapeFragmentManager;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape;
 
 /**
@@ -16,6 +17,8 @@ public class PlayShapesFragment extends Fragment {
     private static final String TAG = "PlayShapesFragment";
 
     public static final String CHORD_SHAPE_TO_PLAY = "chord_shape_to_play";
+
+    private PlayShapeFragmentManager mPlayShapeFragmentManager;
 
     public static PlayShapesFragment newInstance(ChordShape chordShapeToPlay){
         Bundle args = new Bundle();
@@ -38,8 +41,15 @@ public class PlayShapesFragment extends Fragment {
             final ChordShape chordShape = (ChordShape) args.getSerializable(CHORD_SHAPE_TO_PLAY);
 
             if(chordShape != null){
+
+                mPlayShapeFragmentManager = new PlayShapeFragmentManager(chordShape);
+
                 Log.i(TAG, "in PlayShapesFragment chord shape is " + chordShape.toString());
             }
         }
+    }
+
+    private PlayShapeFragmentManager getPlayShapeFragmentManager() {
+        return mPlayShapeFragmentManager;
     }
 }

@@ -1,4 +1,4 @@
-package com.androiddeveloper.webprog26.ghordsgenerator.engine.managers;
+package com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.screens_managers;
 
 import android.support.v4.app.FragmentManager;
 import android.util.Log;

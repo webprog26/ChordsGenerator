@@ -3,7 +3,7 @@ package com.androiddeveloper.webprog26.ghordsgenerator.engine.listeners;
 import android.view.View;
 
 import com.androiddeveloper.webprog26.ghordsgenerator.R;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.PlayShapeActivityManager;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.screens_managers.PlayShapeActivityManager;
 
 
 /**
