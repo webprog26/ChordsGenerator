@@ -33,6 +33,7 @@ public class PlayShapeActivityManager extends ScreenManager{
     public PlayShapeActivityManager(FragmentManager mFragmentManager, int containerViewId, ChordInfoHolder mChordInfoHolder, PlayShapeActivityControlsEnabler mPlayShapeActivityControlsEnabler) {
         super(mFragmentManager, containerViewId);
         this.mChordInfoHolder = mChordInfoHolder;
+        this.currentShapePosition = mChordInfoHolder.getClickedShapePosition();
         this.mPlayShapeActivityControlsEnabler = mPlayShapeActivityControlsEnabler;
 
         changeControlsEnabledState();
