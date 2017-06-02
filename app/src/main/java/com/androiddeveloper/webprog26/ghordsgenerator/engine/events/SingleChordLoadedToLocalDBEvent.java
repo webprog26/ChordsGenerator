@@ -1,7 +1,8 @@
 package com.androiddeveloper.webprog26.ghordsgenerator.engine.events;
 
 /**
- * Created by webpr on 31.05.2017.
+ * Notifies {@link com.androiddeveloper.webprog26.ghordsgenerator.StartActivity} that another chord
+ * has been succesfully loaded to local database. Used to update it's {@link android.widget.ProgressBar} status
  */
 
 public class SingleChordLoadedToLocalDBEvent {

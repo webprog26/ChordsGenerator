@@ -6,7 +6,7 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.realizers.AddChords
 import java.util.ArrayList;
 
 /**
- * Created by webpr on 31.05.2017.
+ * Adds {@link Chord} to local database
  */
 
 public class AddChordsToLocalDbCommand implements Command {

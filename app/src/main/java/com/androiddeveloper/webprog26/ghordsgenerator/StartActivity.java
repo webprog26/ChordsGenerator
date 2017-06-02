@@ -21,7 +21,7 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.JSONDataHasB
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.ReadJSONDataEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.SingleChordLoadedToLocalDBEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.ShapeTableNameHelper;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.AppDataManager;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.app_data_manager.AppDataManager;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord;
 
 import org.greenrobot.eventbus.EventBus;

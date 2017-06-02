@@ -5,7 +5,9 @@ import android.graphics.Bitmap;
 import java.util.ArrayList;
 
 /**
- * Created by webpr on 01.06.2017.
+ * Notifies {@link com.androiddeveloper.webprog26.ghordsgenerator.MainActivity} that
+ * {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape} {@link Bitmap}
+ * images successfully loaded from assets
  */
 
 public class BitmapsArrayLoadedEvent {

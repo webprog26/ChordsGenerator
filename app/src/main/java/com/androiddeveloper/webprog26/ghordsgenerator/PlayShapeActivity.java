@@ -81,32 +81,14 @@ public class PlayShapeActivity extends AppCompatActivity implements PlayShapeAct
         mPlayShapeActivityManager.loadChordShapesFromLocalDB();
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        EventBus.getDefault().register(this);
-//    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        PlayShapeActivityManager playShapeActivityManager = getPlayShapeActivityManager();
-
-        if(playShapeActivityManager != null){
-
-//            playShapeActivityManager.loadChordShapesFromLocalDB();
-        }
-    }
-
-//    @Override
-//    protected void onStop() {
-//        EventBus.getDefault().unregister(this);
-//        super.onStop();
-//    }
-
     @Override
     protected void onDestroy() {
+        Log.i(TAG, "onDestroy");
+
+        if(mPlayShapeActivityManager != null){
+            mPlayShapeActivityManager = null;
+        }
+
         EventBus.getDefault().unregister(this);
         super.onDestroy();
     }

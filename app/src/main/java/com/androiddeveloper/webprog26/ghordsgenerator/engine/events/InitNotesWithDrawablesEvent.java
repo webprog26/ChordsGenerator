@@ -1,11 +1,11 @@
 package com.androiddeveloper.webprog26.ghordsgenerator.engine.events;
 
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Note;
-
-import java.util.ArrayList;
 
 /**
- * Created by webpr on 01.06.2017.
+ * Notifies {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.fragments.PlayShapesFragment}
+ * that {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape}
+ * {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Note}s should be initialized
+ * with it's {@link android.graphics.drawable.Drawable}s
  */
 
 public class InitNotesWithDrawablesEvent {

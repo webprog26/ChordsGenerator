@@ -3,7 +3,7 @@ package com.androiddeveloper.webprog26.ghordsgenerator.engine.commands;
 import android.support.v4.app.FragmentManager;
 
 /**
- * Created by webpr on 01.06.2017.
+ * Abstract class fo r FragmentLoaders
  */
 
 public abstract class LoadFragmentCommand implements Command {

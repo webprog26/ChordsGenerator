@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * Created by webpr on 31.05.2017.
+ * Creates local database
  */
 
 public class ChordsDBHelper extends SQLiteOpenHelper {

@@ -5,7 +5,7 @@ import android.app.Application;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.db.ChordsDBProvider;
 
 /**
- * Created by webpr on 31.05.2017.
+ * Application class to create single Database provider instance
  */
 
 public class ChordsGeneratorApp extends Application {

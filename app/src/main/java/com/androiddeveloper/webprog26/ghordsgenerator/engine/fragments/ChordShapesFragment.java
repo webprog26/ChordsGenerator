@@ -27,13 +27,15 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * Created by webpr on 31.05.2017.
+ * Fragment, that shows list og {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord}
+ * shapes images on the app's main screen
  */
 
 public class ChordShapesFragment extends Fragment {
 
     private static final String TAG = "ChordShapesFragment";
 
+    //Tag to receive Chord shapes table name as an argument
     public static final String CHORD_SHAPES_TABLE_NAME = "chord_shapes_table_name";
 
     @BindView(R.id.rv_chord_images)
@@ -43,6 +45,11 @@ public class ChordShapesFragment extends Fragment {
     private ChordShapesAdapter mChordShapesAdapter;
     private Unbinder unbinder;
 
+    /**
+     * Returns {@link ChordShapesFragment} filled with Chord shapes table name as an argument
+     * @param chordShapesTableName {@link String}
+     * @return ChordShapesFragment
+     */
     public static ChordShapesFragment newInstance(String chordShapesTableName){
         Bundle args = new Bundle();
         args.putString(CHORD_SHAPES_TABLE_NAME, chordShapesTableName);
@@ -66,8 +73,10 @@ public class ChordShapesFragment extends Fragment {
 
             if(chordShapesTableName != null){
 
+                //Initializing ChordShapesFragmentManager
                 mChordShapesFragmentManager = new ChordShapesFragmentManager(chordShapesTableName, getActivity().getAssets());
 
+                //Initializing "empty" ChordShapesAdapter
                 mChordShapesAdapter = new ChordShapesAdapter(mChordShapesFragmentManager.getChordShapesBitmaps(), getActivity());
 
                 Log.i(TAG, "chordShapesTableName: " + chordShapesTableName);
@@ -93,6 +102,7 @@ public class ChordShapesFragment extends Fragment {
         ChordShapesFragmentManager chordShapesFragmentManager = getChordShapesFragmentManager();
 
         if(chordShapesFragmentManager != null){
+            //load bitmaps from assets via separate Thread, using EventBus
             chordShapesFragmentManager.loadShapesBitmaps();
         }
     }
@@ -135,6 +145,11 @@ public class ChordShapesFragment extends Fragment {
         return mChordShapesAdapter;
     }
 
+    /**
+     * Handles {@link LoadChordShapesBitmapsEvent} Adds loaded from assets bitmaps to {@link ChordShapesFragmentManager} list
+     * of {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape}s images
+     * @param loadChordShapesBitmapsEvent {@link LoadChordShapesBitmapsEvent}
+     */
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onLoadChordShapesBitmapsEvent(LoadChordShapesBitmapsEvent loadChordShapesBitmapsEvent){
         getChordShapesFragmentManager()
@@ -144,6 +159,11 @@ public class ChordShapesFragment extends Fragment {
                                                                    .getChordShapesTableName()));
     }
 
+    /**
+     * Handles {@link BitmapsArrayLoadedEvent} Update {@link ChordShapesAdapter} data with
+     * {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape} bitmaps
+     * @param bitmapsArrayLoadedEvent {@link BitmapsArrayLoadedEvent}
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onBitmapsArrayLoadedEvent(BitmapsArrayLoadedEvent bitmapsArrayLoadedEvent){
         getChordShapesAdapter().updateAdapterData(bitmapsArrayLoadedEvent.getBitmaps());

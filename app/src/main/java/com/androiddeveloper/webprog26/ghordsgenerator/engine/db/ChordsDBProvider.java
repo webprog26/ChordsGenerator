@@ -3,7 +3,6 @@ package com.androiddeveloper.webprog26.ghordsgenerator.engine.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Point;
 import android.util.Log;
 
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.ChordsUploadedToDatabaseEvent;
@@ -21,7 +20,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by webpr on 31.05.2017.
+ * Manages work with local database
  */
 
 public class ChordsDBProvider {
@@ -47,6 +46,11 @@ public class ChordsDBProvider {
         return mChordsDBHelper;
     }
 
+    /**
+     * Inserts {@link ArrayList} of {@link Chord} to local database
+     * @param chords
+     * @throws Exception
+     */
     public void insertChordsToDB(final ArrayList<Chord> chords) throws Exception{
         for(Chord chord: chords){
 
@@ -136,6 +140,11 @@ public class ChordsDBProvider {
         getChordsDBHelper().getWritableDatabase().insert(shapesTableTitle, null, contentValues);
     }
 
+    /**
+     * Packs Notes to JSON object and than calls it's toString() method
+     * @param notes {@link ArrayList}
+     * @return String
+     */
     private String getNotesArrayToString(ArrayList<Note> notes){
         JSONObject json = new JSONObject();
         JSONArray jsonArray = new JSONArray();
@@ -217,6 +226,11 @@ public class ChordsDBProvider {
         return chordShapes;
     }
 
+    /**
+     * Creates new {@link MutedStringsHolder} instance and fills it with the data
+     * @param cursor {@link Cursor}
+     * @return MutedStringsHolder
+     */
     private MutedStringsHolder getMutedStringsHolder(Cursor cursor){
         return new MutedStringsHolder(
                 getBoolean(cursor.getString(cursor.getColumnIndex(ChordsDBHelper.SHAPE_FIRST_STRING_MUTED))),
@@ -291,6 +305,11 @@ public class ChordsDBProvider {
         return notes;
     }
 
+    /**
+     * Gets single {@link Note} instance from {@link JSONObject}
+     * @param noteJsonObject {@link JSONObject}
+     * @return Note
+     */
     private Note getNoteFromJSONObject(JSONObject noteJsonObject){
         Note note = null;
         if(noteJsonObject != null){
@@ -309,6 +328,11 @@ public class ChordsDBProvider {
         return note;
     }
 
+    /**
+     * Creates {@link JSONObject} from {@link String}
+     * @param jsonNotesString {@link String}
+     * @return JSONObject
+     */
     private JSONObject getJSONNotesObject(String jsonNotesString){
         JSONObject jsonNotes = null;
         try {
@@ -319,6 +343,11 @@ public class ChordsDBProvider {
         return jsonNotes;
     }
 
+    /**
+     * Gets {@link ArrayList} of {@link ChordShape}s images
+     * @param chordShapesTableName {@link String}
+     * @return ArrayList
+     */
     public ArrayList<String> getChordShapesBitmapsPath(final String chordShapesTableName){
 
         ArrayList<String> chordShapesBitmapsPath = new ArrayList<>();

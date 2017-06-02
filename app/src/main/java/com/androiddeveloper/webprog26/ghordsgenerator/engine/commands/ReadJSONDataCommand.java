@@ -5,7 +5,7 @@ import android.content.res.AssetManager;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.realizers.ReadJSONRealizer;
 
 /**
- * Created by webpr on 31.05.2017.
+ * Reads data from JSON-file
  */
 
 public class ReadJSONDataCommand implements Command {

@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.fragments.ChordShapesFragment;
 
 /**
- * Created by webpr on 01.06.2017.
+ * Loads {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape} fragment
  */
 
 public class LoadChordShapesFragmentCommand extends LoadFragmentCommand {

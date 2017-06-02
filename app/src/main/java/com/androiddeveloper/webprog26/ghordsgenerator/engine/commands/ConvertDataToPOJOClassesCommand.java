@@ -3,7 +3,7 @@ package com.androiddeveloper.webprog26.ghordsgenerator.engine.commands;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.realizers.ConvertDataToPOJOClassesRealizer;
 
 /**
- * Created by webpr on 31.05.2017.
+ * Converts data from JSON to POJO
  */
 
 public class ConvertDataToPOJOClassesCommand implements Command {

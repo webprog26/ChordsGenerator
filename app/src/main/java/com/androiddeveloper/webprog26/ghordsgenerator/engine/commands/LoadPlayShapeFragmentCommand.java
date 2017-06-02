@@ -8,7 +8,7 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.fragments.PlayShape
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape;
 
 /**
- * Created by webpr on 01.06.2017.
+ * Loads play sgape fragment
  */
 
 public class LoadPlayShapeFragmentCommand extends LoadFragmentCommand {

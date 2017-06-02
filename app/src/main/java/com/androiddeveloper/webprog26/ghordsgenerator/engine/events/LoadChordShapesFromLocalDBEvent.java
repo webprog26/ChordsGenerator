@@ -1,7 +1,9 @@
 package com.androiddeveloper.webprog26.ghordsgenerator.engine.events;
 
 /**
- * Created by webpr on 01.06.2017.
+ * Notifies {@link com.androiddeveloper.webprog26.ghordsgenerator.PlayShapeActivity} that
+ * {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape}s should be
+ * loaded from local database
  */
 
 public class LoadChordShapesFromLocalDBEvent {

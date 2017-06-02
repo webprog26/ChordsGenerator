@@ -5,7 +5,8 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord;
 import java.util.ArrayList;
 
 /**
- * Created by webpr on 31.05.2017.
+ * CNotifies {@link com.androiddeveloper.webprog26.ghordsgenerator.StartActivity}
+ * that JSON data has benn successfully converted to POJOs
  */
 
 public class DataHasBeenConvertedToPOJOsEvent {

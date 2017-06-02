@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.InitNotesWithDrawablesEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.NotesInitializedWithDrawablesEvent;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.NotePlayer;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.fretboard.Fretboard;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.fretboard.guitar_string.GuitarString;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.FingerIndexDrawableIDHelper;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
  * Created by webpr on 01.06.2017.
  */
 
-public class PlayShapeFragmentManager {
+public class PlayShapeFragmentManager implements NotePlayer{
 
     private static final String TAG = "PSFManager";
 
@@ -154,15 +155,22 @@ public class PlayShapeFragmentManager {
 
             if(notes.size() > 0){
 
+                for(Note note: notes){
+                    Log.i(TAG, note.getNoteTitle());
+                }
+
                 Fretboard fretboard = getFretboard();
 
-                for(int i = 0; i < notes.size(); i++){
+                int noteIndex = 0;
+
+                for(int i = 0; i < Fretboard.STRINGS_COUNT; i++){
 
                     GuitarString guitarString = fretboard.getGuitarString(i);
 
                     if(!guitarString.isMuted()){
 
-                        guitarString.setNote(notes.get(i));
+                        guitarString.setNote(notes.get(noteIndex));
+                        noteIndex++;
                     }
                 }
             }
@@ -256,11 +264,10 @@ public class PlayShapeFragmentManager {
             }
         }
 
-
-
     }
 
     public void setStringsCoordinates(float startX, float endX, int index){
+        Log.i(TAG, "setStringsCoordinates " + "start " + startX + " end " + endX + " index " + index);
         GuitarString guitarString = getFretboard().getGuitarString(index);
         guitarString.setStartX(startX);
         guitarString.setEndX(endX);
@@ -313,5 +320,15 @@ public class PlayShapeFragmentManager {
 
     private AssetManager getAssetManager() {
         return mAssetManager;
+    }
+
+    @Override
+    public void playNote(int noteSound) {
+        Log.i(TAG, "noteSound: " + noteSound);
+        SoundPool soundPool = getSoundPool();
+
+        if(soundPool != null){
+            soundPool.play(noteSound, 1, 1, 0, 0, 1);
+        }
     }
 }

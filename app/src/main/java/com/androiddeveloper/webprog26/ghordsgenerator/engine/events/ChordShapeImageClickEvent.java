@@ -1,7 +1,9 @@
 package com.androiddeveloper.webprog26.ghordsgenerator.engine.events;
 
 /**
- * Created by webpr on 01.06.2017.
+ * Notifies {@link com.androiddeveloper.webprog26.ghordsgenerator.MainActivity}
+ * than {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape} {@link android.graphics.Bitmap}
+ * image was clicked
  */
 
 public class ChordShapeImageClickEvent {

@@ -1,7 +1,9 @@
 package com.androiddeveloper.webprog26.ghordsgenerator.engine.events;
 
 /**
- * Created by webpr on 31.05.2017.
+ * Notifies {@link com.androiddeveloper.webprog26.ghordsgenerator.StartActivity}
+ * that {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord}s
+ * should be converted to POJOs
  */
 
 public class ConvertDataToPOJOClassesEvent {

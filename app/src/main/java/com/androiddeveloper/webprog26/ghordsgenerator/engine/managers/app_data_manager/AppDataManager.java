@@ -1,4 +1,4 @@
-package com.androiddeveloper.webprog26.ghordsgenerator.engine.managers;
+package com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.app_data_manager;
 
 import android.content.res.AssetManager;
 

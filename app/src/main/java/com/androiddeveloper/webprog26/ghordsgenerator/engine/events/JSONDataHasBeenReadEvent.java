@@ -1,7 +1,8 @@
 package com.androiddeveloper.webprog26.ghordsgenerator.engine.events;
 
 /**
- * Created by webpr on 31.05.2017.
+ * Notifies {@link com.androiddeveloper.webprog26.ghordsgenerator.StartActivity} that
+ * JSON data has been successfully read from assets
  */
 
 public class JSONDataHasBeenReadEvent {
