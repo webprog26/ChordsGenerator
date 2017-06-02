@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/gl_fret"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:columnCount="6"
+    android:rowCount="5">
+
+    <include
+        android:id="@+id/sixth_string"
+        layout="@layout/single_fret_layout"/>
+
+    <include
+        android:id="@+id/fifth_string"
+        layout="@layout/single_fret_layout"/>
+
+    <include
+        android:id="@+id/fourth_string"
+        layout="@layout/single_fret_layout"/>
+
+    <include
+        android:id="@+id/third_string"
+        layout="@layout/single_fret_layout"/>
+
+    <include
+        android:id="@+id/second_string"
+        layout="@layout/single_fret_layout"/>
+
+    <include
+        android:id="@+id/first_string"
+        layout="@layout/single_fret_layout"/>
+</GridLayout>
