@@ -21,6 +21,7 @@ public class Note implements Serializable{
     private Drawable mNoteTitleDrawable;
     private Drawable mNoteFingerIndexDrawable;
     private int mNoteSound = NO_SOUND;
+    private boolean isFingerIndexVisible = false;
 
     public Note(String noteTitle,
                 int noteFret,
@@ -76,5 +77,13 @@ public class Note implements Serializable{
 
     public void setNoteSound(int noteSound) {
         this.mNoteSound = noteSound;
+    }
+
+    public boolean isFingerIndexVisible() {
+        return isFingerIndexVisible;
+    }
+
+    public void setFingerIndexVisible(boolean fingerIndexVisible) {
+        isFingerIndexVisible = fingerIndexVisible;
     }
 }

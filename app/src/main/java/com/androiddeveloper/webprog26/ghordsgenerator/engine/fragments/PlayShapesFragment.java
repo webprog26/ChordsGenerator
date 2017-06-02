@@ -7,8 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.androiddeveloper.webprog26.ghordsgenerator.R;
@@ -17,8 +19,8 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.NotesInitial
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.fretboard.Fretboard;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.fretboard.guitar_string.GuitarString;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.FretNumbersTransformHelper;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.FretViewsHelper;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.fragments_managers.PlayShapeFragmentManager;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Note;
 
@@ -41,6 +43,13 @@ public class PlayShapesFragment extends Fragment {
 
     public static final String CHORD_SHAPE_TO_PLAY = "chord_shape_to_play";
 
+    private static final int FIRST_STRING_LAST_FRET_INDEX = 4;
+    private static final int FRETS_PER_STRING_NUMBER = 5;
+
+    private static final int STRING_IMAGE_VIEW_INDEX = 0;
+
+    private static final int TRASH_HOLD_SIZE = 20;
+
     private PlayShapeFragmentManager mPlayShapeFragmentManager;
 
     @BindView(R.id.gl_fret)
@@ -55,6 +64,7 @@ public class PlayShapesFragment extends Fragment {
             R.id.sixth_string_muted})
     ImageView[] mStringMutedImageViews;
 
+    private FretViewsHelper mFretViewsHelper;
     private Unbinder unbinder;
 
     public static PlayShapesFragment newInstance(ChordShape chordShapeToPlay){
@@ -100,6 +110,10 @@ public class PlayShapesFragment extends Fragment {
 
                 mPlayShapeFragmentManager.initNotesWithDrawables();
                 Log.i(TAG, "in PlayShapesFragment chord shape is " + chordShape.toString());
+
+               if(mFretViewsHelper == null){
+                   mFretViewsHelper = new FretViewsHelper(getActivity(), getFretboardGridLayout(), mPlayShapeFragmentManager, getStringMutedImageViews());
+               }
             }
         }
     }
@@ -155,6 +169,90 @@ public class PlayShapesFragment extends Fragment {
 
                 getTvFretToStart().setText(FretNumbersTransformHelper.getFretToStartString(chordShape.getStartFretPosition()));
 
+                if(mFretViewsHelper != null){
+
+                   mFretViewsHelper.initMutedStrings();
+
+                if(playShapeFragmentManager.isShouldDrawBar()){
+
+                        mFretViewsHelper.drawBar();
+                    }
+
+                }
+
+                final GridLayout fretboardGridLayout = getFretboardGridLayout();
+
+                if(fretboardGridLayout != null){
+
+                    fretboardGridLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+
+                            fretboardGridLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                            int stringIndex = 0;
+
+                            for(int i = FIRST_STRING_LAST_FRET_INDEX; i < fretboardGridLayout.getChildCount(); i+= FRETS_PER_STRING_NUMBER){
+                                RelativeLayout fretRelativeLayout = mFretViewsHelper.getFretLayout(i);
+
+                                if(fretRelativeLayout != null){
+
+                                    ImageView stringImageView = mFretViewsHelper.getStringImageView(fretRelativeLayout, STRING_IMAGE_VIEW_INDEX);
+
+                                    if(stringImageView != null){
+                                        playShapeFragmentManager.setStringsCoordinates((fretRelativeLayout.getX() + stringImageView.getX() - TRASH_HOLD_SIZE),
+                                                (fretRelativeLayout.getX() + stringImageView.getX()) + stringImageView.getWidth() + TRASH_HOLD_SIZE, stringIndex);
+                                        stringIndex++;
+                                    }
+                                }
+                            }
+
+
+                            Fretboard fretboard = playShapeFragmentManager.getFretboard();
+
+                            if(fretboard != null){
+
+                                for(int i = 0; i < Fretboard.STRINGS_COUNT; i++){
+
+                                    GuitarString currentGuitarString = fretboard.getGuitarString(i);
+
+                                    if(currentGuitarString != null){
+
+                                        Note currentNote = currentGuitarString.getNote();
+
+                                        if(currentNote != null){
+
+                                            float stringPlayableY;
+
+                                            if(currentNote.getNoteFret() == 0){
+                                                stringPlayableY = 0;
+                                            } else {
+                                                stringPlayableY = (float) fretboardGridLayout.getChildAt(currentNote.getNoteFret() - 1).getBottom();
+                                            }
+
+
+                                            Log.i(TAG, currentGuitarString.getTitle() + " with note " + currentGuitarString.getNote().getNoteTitle()
+                                                    + " stringPlayableY " + stringPlayableY);
+                                            playShapeFragmentManager.setStringPlayableY(stringPlayableY, i);
+
+                                        } else {
+                                            Log.i(TAG, "currentNote is null at " + currentGuitarString.getTitle());
+                                        }
+                                    } else {
+                                        Log.i(TAG, "currentGuitarString is null");
+                                    }
+                                }
+                            } else {
+                                Log.i(TAG, "fretboard is null");
+                            }
+
+
+                            catchFretboardTouches();
+                            fretboardGridLayout.getViewTreeObserver().addOnGlobalLayoutListener(this);
+                        }
+                    });
+                }
+
             }
         }
 
@@ -198,7 +296,45 @@ public class PlayShapesFragment extends Fragment {
         }
     }
 
+    private void catchFretboardTouches(){
+//        getFretboardGridLayout().setOnTouchListener(new FretTouchListener(getPlayShapeFragmentManager()));
+
+        PlayShapeFragmentManager playShapeFragmentManager = getPlayShapeFragmentManager();
+
+        if(playShapeFragmentManager != null){
+
+            Fretboard fretboard = playShapeFragmentManager.getFretboard();
+
+            if(fretboard != null){
+
+                for(int i = 0; i < Fretboard.STRINGS_COUNT; i++){
+
+                    GuitarString guitarString = fretboard.getGuitarString(i);
+
+                    if(guitarString != null){
+
+                        Log.i(TAG, guitarString.getTitle() + " getStartX() " + guitarString.getStartX());
+                        Log.i(TAG, guitarString.getTitle() + " getEndX() " + guitarString.getEndX());
+                        Log.i(TAG, guitarString.getTitle() + " getPlayableY() " + guitarString.getPlayableY());
+
+                    }
+
+                }
+
+            }
+
+        }
+    }
+
+    public GridLayout getFretboardGridLayout() {
+        return mGlFret;
+    }
+
     public TextView getTvFretToStart() {
         return mTvFretToStart;
+    }
+
+    public ImageView[] getStringMutedImageViews() {
+        return mStringMutedImageViews;
     }
 }
