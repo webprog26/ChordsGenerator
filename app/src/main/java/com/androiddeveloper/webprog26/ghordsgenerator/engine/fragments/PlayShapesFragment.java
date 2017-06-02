@@ -1,6 +1,8 @@
 package com.androiddeveloper.webprog26.ghordsgenerator.engine.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -16,8 +18,9 @@ import android.widget.TextView;
 import com.androiddeveloper.webprog26.ghordsgenerator.R;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.InitNotesWithDrawablesEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.NotesInitializedWithDrawablesEvent;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.fretboard.Fretboard;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.fretboard.guitar_string.GuitarString;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.StringsCoordinatesSaver;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.fretboard.Fretboard;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.fretboard.guitar_string.GuitarString;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.FretNumbersTransformHelper;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.FretViewsHelper;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.fragments_managers.PlayShapeFragmentManager;
@@ -43,6 +46,8 @@ public class PlayShapesFragment extends Fragment {
 
     public static final String CHORD_SHAPE_TO_PLAY = "chord_shape_to_play";
 
+    private static final String ARE_STRINGS_COORDINATES_SAVED_TAG = "are_strings_coordinates_saved";
+
     private static final int FIRST_STRING_LAST_FRET_INDEX = 4;
     private static final int FRETS_PER_STRING_NUMBER = 5;
 
@@ -66,6 +71,7 @@ public class PlayShapesFragment extends Fragment {
 
     private FretViewsHelper mFretViewsHelper;
     private Unbinder unbinder;
+    private SharedPreferences mSharedPreferences;
 
     public static PlayShapesFragment newInstance(ChordShape chordShapeToPlay){
         Bundle args = new Bundle();
@@ -81,6 +87,8 @@ public class PlayShapesFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
     }
 
     @Nullable
@@ -120,11 +128,18 @@ public class PlayShapesFragment extends Fragment {
 
     @Override
     public void onPause() {
+        Log.i(TAG, "onPause");
         PlayShapeFragmentManager playShapeFragmentManager = getPlayShapeFragmentManager();
         if(playShapeFragmentManager != null){
             playShapeFragmentManager.releaseSoundPool();
             playShapeFragmentManager.removeDrawablesFromNotes();
 
+            if(mFretViewsHelper != null){
+                mFretViewsHelper.removeNotesImages();
+                mFretViewsHelper = null;
+            }
+
+            mPlayShapeFragmentManager = null;
         }
         super.onPause();
     }
@@ -173,6 +188,8 @@ public class PlayShapesFragment extends Fragment {
 
                    mFretViewsHelper.initMutedStrings();
 
+                   mFretViewsHelper.initNotesImages();
+
                 if(playShapeFragmentManager.isShouldDrawBar()){
 
                         mFretViewsHelper.drawBar();
@@ -188,24 +205,70 @@ public class PlayShapesFragment extends Fragment {
                         @Override
                         public void onGlobalLayout() {
 
-                            fretboardGridLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                           fretboardGridLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
+                        if(mPlayShapeFragmentManager != null){
                             int stringIndex = 0;
+                            if(!mSharedPreferences.getBoolean(ARE_STRINGS_COORDINATES_SAVED_TAG, false)){
 
-                            for(int i = FIRST_STRING_LAST_FRET_INDEX; i < fretboardGridLayout.getChildCount(); i+= FRETS_PER_STRING_NUMBER){
-                                RelativeLayout fretRelativeLayout = mFretViewsHelper.getFretLayout(i);
+                                if(mFretViewsHelper != null){
 
-                                if(fretRelativeLayout != null){
 
-                                    ImageView stringImageView = mFretViewsHelper.getStringImageView(fretRelativeLayout, STRING_IMAGE_VIEW_INDEX);
 
-                                    if(stringImageView != null){
-                                        playShapeFragmentManager.setStringsCoordinates((fretRelativeLayout.getX() + stringImageView.getX() - TRASH_HOLD_SIZE),
-                                                (fretRelativeLayout.getX() + stringImageView.getX()) + stringImageView.getWidth() + TRASH_HOLD_SIZE, stringIndex);
-                                        stringIndex++;
+                                    for(int i = (fretboardGridLayout.getChildCount() - 1); i >= FIRST_STRING_LAST_FRET_INDEX ; i-= FRETS_PER_STRING_NUMBER){
+                                        RelativeLayout fretRelativeLayout = mFretViewsHelper.getFretLayout(i);
+
+                                        if(fretRelativeLayout != null){
+
+                                            ImageView stringImageView = mFretViewsHelper.getStringImageView(fretRelativeLayout, STRING_IMAGE_VIEW_INDEX);
+
+                                            if(stringImageView != null){
+                                                playShapeFragmentManager.setStringsCoordinates((fretRelativeLayout.getX() + stringImageView.getX() - TRASH_HOLD_SIZE),
+                                                        (fretRelativeLayout.getX() + stringImageView.getX()) + stringImageView.getWidth() + TRASH_HOLD_SIZE, stringIndex);
+                                                stringIndex++;
+                                            }
+                                        }
                                     }
-                                }
+
+                                    StringsCoordinatesSaver.saveStringsCoordinatesToSharedPreferences(mSharedPreferences, playShapeFragmentManager.getFretboard());
+                                    mSharedPreferences.edit().putBoolean(ARE_STRINGS_COORDINATES_SAVED_TAG, true).apply();
+
                             }
+
+                         } else {
+                                if(playShapeFragmentManager != null){
+
+                                    playShapeFragmentManager.setStringsCoordinates(
+                                            mSharedPreferences.getFloat(StringsCoordinatesSaver.FIRST_STRING_START_X, GuitarString.NO_COORDINATE),
+                                            mSharedPreferences.getFloat(StringsCoordinatesSaver.FIRST_STRING_END_X, GuitarString.NO_COORDINATE),
+                                            StringsCoordinatesSaver.FIRST_STRING);
+
+                                    playShapeFragmentManager.setStringsCoordinates(
+                                            mSharedPreferences.getFloat(StringsCoordinatesSaver.SECOND_STRING_START_X, GuitarString.NO_COORDINATE),
+                                            mSharedPreferences.getFloat(StringsCoordinatesSaver.SECOND_STRING_END_X, GuitarString.NO_COORDINATE),
+                                            StringsCoordinatesSaver.SECOND_STRING);
+
+                                    playShapeFragmentManager.setStringsCoordinates(
+                                            mSharedPreferences.getFloat(StringsCoordinatesSaver.THIRD_STRING_START_X, GuitarString.NO_COORDINATE),
+                                            mSharedPreferences.getFloat(StringsCoordinatesSaver.THIRD_STRING_END_X, GuitarString.NO_COORDINATE),
+                                            StringsCoordinatesSaver.THIRD_STRING);
+
+                                    playShapeFragmentManager.setStringsCoordinates(
+                                            mSharedPreferences.getFloat(StringsCoordinatesSaver.FOURTH_STRING_START_X, GuitarString.NO_COORDINATE),
+                                            mSharedPreferences.getFloat(StringsCoordinatesSaver.FOURTH_STRING_END_X, GuitarString.NO_COORDINATE),
+                                            StringsCoordinatesSaver.FOURTH_STRING);
+
+                                    playShapeFragmentManager.setStringsCoordinates(
+                                            mSharedPreferences.getFloat(StringsCoordinatesSaver.FIFTH_STRING_START_X, GuitarString.NO_COORDINATE),
+                                            mSharedPreferences.getFloat(StringsCoordinatesSaver.FIFTH_STRING_END_X, GuitarString.NO_COORDINATE),
+                                            StringsCoordinatesSaver.FIFTH_STRING);
+
+                                    playShapeFragmentManager.setStringsCoordinates(
+                                            mSharedPreferences.getFloat(StringsCoordinatesSaver.SIXTH_STRING_START_X, GuitarString.NO_COORDINATE),
+                                            mSharedPreferences.getFloat(StringsCoordinatesSaver.SIXTH_STRING_END_X, GuitarString.NO_COORDINATE),
+                                            StringsCoordinatesSaver.SIXTH_STRING);
+                                }
+                         }
 
 
                             Fretboard fretboard = playShapeFragmentManager.getFretboard();
@@ -248,6 +311,7 @@ public class PlayShapesFragment extends Fragment {
 
 
                             catchFretboardTouches();
+                        }
                             fretboardGridLayout.getViewTreeObserver().addOnGlobalLayoutListener(this);
                         }
                     });

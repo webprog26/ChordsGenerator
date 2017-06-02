@@ -1,7 +1,7 @@
-package com.androiddeveloper.webprog26.ghordsgenerator.engine.fretboard;
+package com.androiddeveloper.webprog26.ghordsgenerator.engine.models.fretboard;
 
 
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.fretboard.guitar_string.GuitarString;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.fretboard.guitar_string.GuitarString;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.MutedStringsHolder;
 
 /**
@@ -37,4 +37,7 @@ public class Fretboard {
         return guitarStrings[index];
     }
 
+    public GuitarString[] getGuitarStrings() {
+        return guitarStrings;
+    }
 }

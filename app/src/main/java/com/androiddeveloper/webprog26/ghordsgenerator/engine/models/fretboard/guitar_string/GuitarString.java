@@ -1,6 +1,4 @@
-package com.androiddeveloper.webprog26.ghordsgenerator.engine.fretboard.guitar_string;
-
-import android.util.Log;
+package com.androiddeveloper.webprog26.ghordsgenerator.engine.models.fretboard.guitar_string;
 
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Note;
 
@@ -12,6 +10,8 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Note;
 public class GuitarString {
 
     private static final String TAG = "GuitarString";
+
+    public static final float NO_COORDINATE = -1;
 
     private final String mTitle;
     private final boolean isMuted;

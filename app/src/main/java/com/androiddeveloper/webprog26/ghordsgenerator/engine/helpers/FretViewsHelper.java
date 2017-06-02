@@ -9,12 +9,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.androiddeveloper.webprog26.ghordsgenerator.R;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.fretboard.Fretboard;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.fretboard.guitar_string.GuitarString;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.fretboard.Fretboard;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.fretboard.guitar_string.GuitarString;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.listeners.NoteClickListener;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.fragments_managers.PlayShapeFragmentManager;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Note;
+
+import java.util.ArrayList;
 
 
 /**
@@ -79,6 +81,80 @@ public class FretViewsHelper {
         stringImageView.requestLayout();
         stringImageView.setImageDrawable(getNotesResources().getDrawable(R.drawable.bar));
         stringImageView.bringToFront();
+    }
+
+    public void removeNotesImages(){
+        PlayShapeFragmentManager playShapeFragmentManager = getPlayShapeFragmentManager();
+
+        if(playShapeFragmentManager != null) {
+
+            ChordShape chordShape = playShapeFragmentManager.getChordShape();
+
+            if(chordShape != null){
+
+                ArrayList<Note> notes = chordShape.getNotes();
+
+                if(notes != null){
+
+                    if(notes.size() > 0){
+
+                        for (final Note note : notes) {
+
+                            if(note != null){
+
+                                removeImageFromSingleNote(note);
+
+                            }
+                        }
+
+                    }
+
+                }
+            }
+
+        }
+    }
+
+    public void initNotesImages(){
+
+        PlayShapeFragmentManager playShapeFragmentManager = getPlayShapeFragmentManager();
+
+        if(playShapeFragmentManager != null) {
+
+            ChordShape chordShape = playShapeFragmentManager.getChordShape();
+
+            if(chordShape != null){
+
+                ArrayList<Note> notes = chordShape.getNotes();
+
+                if(notes != null){
+
+                    if(notes.size() > 0){
+
+                            for (final Note note : notes) {
+
+                                if(note != null){
+
+                                    initSingleNoteWithImages(note);
+
+                                }
+                            }
+
+                    }
+
+                }
+            }
+
+        }
+    }
+
+    private void removeImageFromSingleNote(final Note note){
+        if(note.getNoteTitleDrawable() != null){
+
+            ImageView stringImageView = getStringImageView(getFretLayout(note.getNotePlace()), NOTE_IMAGE_VIEW_INDEX);
+            stringImageView.setImageDrawable(null);
+            stringImageView.setOnClickListener(null);
+        }
     }
 
     private void initSingleNoteWithImages(final Note note){

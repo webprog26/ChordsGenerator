@@ -9,8 +9,8 @@ import android.util.Log;
 
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.InitNotesWithDrawablesEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.NotesInitializedWithDrawablesEvent;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.fretboard.Fretboard;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.fretboard.guitar_string.GuitarString;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.fretboard.Fretboard;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.fretboard.guitar_string.GuitarString;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.FingerIndexDrawableIDHelper;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.NoteBitmapsHelper;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape;
