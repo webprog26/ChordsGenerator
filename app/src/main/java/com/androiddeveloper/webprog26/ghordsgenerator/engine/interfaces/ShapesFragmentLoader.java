@@ -3,11 +3,11 @@ package com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord;
 
 /**
- * Created by webpr on 01.06.2017.
+ * Shapes {@link android.support.v4.app.Fragment} loader
  */
 
 public interface ShapesFragmentLoader {
 
-    public void setFragmentWithListOfChordImages(final Chord chord);
-    public void setPlayableShapeFragment();
+    void setFragmentWithListOfChordImages(final Chord chord);
+    void setPlayableShapeFragment();
 }

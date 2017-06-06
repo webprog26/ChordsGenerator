@@ -5,11 +5,13 @@ import android.content.res.Resources;
 import com.androiddeveloper.webprog26.ghordsgenerator.R;
 
 /**
- * Created by webpr on 01.06.2017.
+ * Gets the {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord}
+ * second title from {@link Resources}
  */
 
 public class ChordSecondTitleHelper {
 
+    //Possible Chord titles
     private static final String C_SHARP = "C#";
     private static final String D_FLAT = "Db";
     private static final String D_SHARP = "D#";
@@ -22,19 +24,24 @@ public class ChordSecondTitleHelper {
 
 
     private final String[] mChordTitles;
-    private final String[] mChordParams;
 
     private final String SHARP;
     private final String FLAT;
 
     public ChordSecondTitleHelper(Resources resources) {
         this.mChordTitles = resources.getStringArray(R.array.chords_titles);
-        this.mChordParams = resources.getStringArray(R.array.chords_params);
+        String[] mChordParams = resources.getStringArray(R.array.chords_params);
 
         SHARP = mChordParams[2];
         FLAT = mChordParams[1];
     }
 
+    /**
+     * Returns {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord}
+     * second title depend on it's title or null in case when second title doesn't exists
+     * @param chordTitle {@link String}
+     * @return String
+     */
     public String getChordSecondTitle(String chordTitle){
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -88,11 +95,11 @@ public class ChordSecondTitleHelper {
         }
     }
 
-    public String getSHARP() {
+    private String getSHARP() {
         return SHARP;
     }
 
-    public String getFLAT() {
+    private String getFLAT() {
         return FLAT;
     }
 }

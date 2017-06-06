@@ -1,11 +1,11 @@
 package com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces;
 
 /**
- * Created by webpr on 18.05.2017.
+ * Manages {@link com.androiddeveloper.webprog26.ghordsgenerator.PlayShapeActivity} control buttons state
  */
 
 public interface PlayShapeActivityControlsEnabler {
 
-    public void setNextPlayableShapeButtonEnabled(boolean enabled);
-    public void setPreviousPlayableShapeButtonEnabled(boolean enabled);
+    void setNextPlayableShapeButtonEnabled(boolean enabled);
+    void setPreviousPlayableShapeButtonEnabled(boolean enabled);
 }

@@ -3,7 +3,7 @@ package com.androiddeveloper.webprog26.ghordsgenerator.engine.models;
 import java.io.Serializable;
 
 /**
- * Created by webpr on 01.06.2017.
+ * Chord info holder
  */
 
 public class ChordInfoHolder implements Serializable{

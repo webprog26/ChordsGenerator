@@ -5,7 +5,8 @@ import android.content.res.Resources;
 import com.androiddeveloper.webprog26.ghordsgenerator.R;
 
 /**
- * Created by webpr on 31.05.2017.
+ * Gets {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape} table title
+ * from {@link Resources}
  */
 
 public class ShapeTableNameHelper {
@@ -18,6 +19,13 @@ public class ShapeTableNameHelper {
 
     private static final String C_MAJ_ORDINARY = "C";
 
+    /**
+     * Returns current {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord}
+     * {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape}
+     * {@link android.database.sqlite.SQLiteDatabase} table title depending on choirds title
+     * @param chordTitle {@link String}
+     * @return String
+     */
     public String getChordShapesTableName(String chordTitle){
 
         final Resources resources = getResources();

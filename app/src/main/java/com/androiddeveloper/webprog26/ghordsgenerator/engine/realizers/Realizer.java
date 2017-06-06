@@ -1,10 +1,10 @@
 package com.androiddeveloper.webprog26.ghordsgenerator.engine.realizers;
 
 /**
- * Created by webpr on 31.05.2017.
+ * Simple interface to realize received actions
  */
 
-public interface Realizer {
+interface Realizer {
 
-    public void realize();
+    void realize();
 }

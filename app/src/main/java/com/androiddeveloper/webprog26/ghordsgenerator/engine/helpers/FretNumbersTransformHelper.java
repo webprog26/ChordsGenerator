@@ -1,7 +1,8 @@
 package com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers;
 
 /**
- * Created by webpr on 25.05.2017.
+ * Gets {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape} start fret
+ * position
  */
 
 public class FretNumbersTransformHelper {
@@ -19,6 +20,13 @@ public class FretNumbersTransformHelper {
     private static final String FRET_11 = "XI";
     private static final String FRET_12 = "XII";
 
+    /**
+     * Returns {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape}
+     * start fret position depending on {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape}
+     * start fret position in JSON
+     * @param startFretPosition int
+     * @return String
+     */
     public static String getFretToStartString(int startFretPosition){
         switch (startFretPosition){
 

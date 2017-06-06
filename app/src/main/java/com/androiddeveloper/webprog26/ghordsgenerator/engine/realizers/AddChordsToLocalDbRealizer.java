@@ -8,7 +8,8 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord;
 import java.util.ArrayList;
 
 /**
- * Created by webpr on 31.05.2017.
+ * Adds {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape} instances
+ * to loacal {@link android.database.sqlite.SQLiteDatabase}
  */
 
 public class AddChordsToLocalDbRealizer implements Realizer {

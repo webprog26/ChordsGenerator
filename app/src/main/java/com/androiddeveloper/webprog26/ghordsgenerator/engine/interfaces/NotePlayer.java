@@ -1,10 +1,10 @@
 package com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces;
 
 /**
- * Created by webpr on 02.06.2017.
+ * Interface to play note sound
  */
 
 public interface NotePlayer {
 
-    public void playNote(int noteSound);
+    void playNote(int noteSound);
 }

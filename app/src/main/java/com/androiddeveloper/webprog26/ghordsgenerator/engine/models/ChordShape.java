@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Created by webpr on 31.05.2017.
+ * Chord shape POJO class
  */
 
 public class ChordShape implements Serializable{

@@ -20,11 +20,13 @@ import java.util.ArrayList;
 
 
 /**
- * Created by webpr on 30.05.2017.
+ * Manages operations with {@link View} elements of app's virtual "fretboard"
+ * in {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.fragments.PlayShapesFragment}
  */
 
 public class FretViewsHelper {
 
+    //Index of nnote image in single fret layout
     private static final int NOTE_IMAGE_VIEW_INDEX = 1;
 
     private final GridLayout fretBoardLayout;
@@ -41,6 +43,9 @@ public class FretViewsHelper {
         this.notesResources = context.getResources();
     }
 
+    /**
+     * Shows markers of muted "guitar strings" depending on JSON info for the current {@link ChordShape}
+     */
     public void initMutedStrings(){
         PlayShapeFragmentManager playShapeFragmentManager = getPlayShapeFragmentManager();
 
@@ -74,6 +79,10 @@ public class FretViewsHelper {
         }
     }
 
+    /**
+     * Shows lines of bar if current {@link ChordShape} has one
+     * @param index int
+     */
     @SuppressWarnings("deprecation")
     private void setBarImage(int index){
         ImageView stringImageView = getStringImageView(getFretLayout(index), NOTE_IMAGE_VIEW_INDEX);
@@ -83,6 +92,9 @@ public class FretViewsHelper {
         stringImageView.bringToFront();
     }
 
+    /**
+     * Removes note images to avoid device unnecessary memory using when app is not in the foreground state
+     */
     public void removeNotesImages(){
         PlayShapeFragmentManager playShapeFragmentManager = getPlayShapeFragmentManager();
 
@@ -115,6 +127,9 @@ public class FretViewsHelper {
         }
     }
 
+    /**
+     * Shows current {@link ChordShape} notes images
+     */
     public void initNotesImages(){
 
         PlayShapeFragmentManager playShapeFragmentManager = getPlayShapeFragmentManager();
@@ -148,6 +163,10 @@ public class FretViewsHelper {
         }
     }
 
+    /**
+     * Removes single note image
+     * @param note {@link Note}
+     */
     private void removeImageFromSingleNote(final Note note){
         if(note.getNoteTitleDrawable() != null){
 
@@ -157,6 +176,10 @@ public class FretViewsHelper {
         }
     }
 
+    /**
+     * Shows single note image
+     * @param note {@link Note}
+     */
     private void initSingleNoteWithImages(final Note note){
         if(note.getNoteTitleDrawable() != null){
 
@@ -169,10 +192,18 @@ public class FretViewsHelper {
         }
     }
 
+    /**
+     * Returns the reference to single fret layout
+     * @param fretIndex int
+     * @return RelativeLayout
+     */
     public RelativeLayout getFretLayout(int fretIndex){
         return (RelativeLayout) getFretBoardLayout().getChildAt(fretIndex);
     }
 
+    /**
+     * Shows current {@link ChordShape} bar images in a loop
+     */
     public void drawBar(){
 
         PlayShapeFragmentManager playShapeFragmentManager = getPlayShapeFragmentManager();
@@ -193,7 +224,13 @@ public class FretViewsHelper {
     }
 
 
-
+    /**
+     * Returns a reference to single fret {@link ImageView}.
+     * Depending on @param index it could be "guitar string" or note image
+     * @param fretLayout {@link RelativeLayout}
+     * @param index int
+     * @return ImageView
+     */
     public ImageView getStringImageView(RelativeLayout fretLayout, int index){
         return (ImageView) fretLayout.getChildAt(index);
     }

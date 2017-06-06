@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Note;
 
 /**
- * Created by webpr on 30.05.2017.
+ * Single note image click listener
  */
 
 public class NoteClickListener implements View.OnClickListener {

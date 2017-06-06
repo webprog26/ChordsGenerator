@@ -1,11 +1,11 @@
 package com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces;
 
 /**
- * Created by webpr on 18.05.2017.
+ * Chord params Spinners of {@link com.androiddeveloper.webprog26.ghordsgenerator.MainActivity} reseter
  */
 
 public interface SpinnerReseter {
 
-    public void resetChordsParamsSpinner();
-    public void setChordsTitleSpinnerPosition(int position);
+    void resetChordsParamsSpinner();
+    void setChordsTitleSpinnerPosition(int position);
 }

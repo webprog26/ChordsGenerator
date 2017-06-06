@@ -79,6 +79,11 @@ public class MainActivity extends AppCompatActivity implements SpinnerReseter{
         super.onStop();
     }
 
+    /**
+     * Handles {@link ChordShapeImageClickEvent}. Starts {@link PlayShapeActivity} and packs in it's Intent {@link ChordInfoHolder}
+     * that contains {@link Chord} data
+     * @param chordShapeImageClickEvent {@link ChordShapeImageClickEvent}
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onChordShapeImageClickEvent(ChordShapeImageClickEvent chordShapeImageClickEvent){
         Log.i(TAG, "onChordShapeImageClickEvent");

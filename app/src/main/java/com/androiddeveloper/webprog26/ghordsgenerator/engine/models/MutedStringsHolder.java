@@ -3,7 +3,7 @@ package com.androiddeveloper.webprog26.ghordsgenerator.engine.models;
 import java.io.Serializable;
 
 /**
- * Created by webpr on 31.05.2017.
+ * Muted string holder
  */
 
 public class MutedStringsHolder implements Serializable{

@@ -47,7 +47,7 @@ public class PlayShapeActivity extends AppCompatActivity implements PlayShapeAct
         EventBus.getDefault().register(this);
 
         Intent receivedIntent = getIntent();
-
+        //Unpacking received ChordInfoHolder
         if(receivedIntent != null){
 
             final ChordInfoHolder chordInfoHolder = (ChordInfoHolder) receivedIntent.getSerializableExtra(CHORD_INFO_HOLDER);
@@ -65,6 +65,7 @@ public class PlayShapeActivity extends AppCompatActivity implements PlayShapeAct
 
                 mShapesControlButtonsListener = new ShapesControlButtonsListener(mPlayShapeActivityManager);
 
+                //Setting chord title
                 getTvChordTitle()
                         .setText(chordInfoHolder.getChordSecondTitle() == null
                                 ? getString(R.string.chord_with_one_title, chordInfoHolder.getChordTitle()) :
@@ -109,6 +110,11 @@ public class PlayShapeActivity extends AppCompatActivity implements PlayShapeAct
         return mBtnPrevious;
     }
 
+    /**
+     * Handles {@link LoadChordShapesFromLocalDBEvent}. Adds loaded from local {@link android.database.sqlite.SQLiteDatabase}
+     * chord shapes to the {@link java.util.ArrayList} of {@link PlayShapeActivityManager}
+     * @param loadChordShapesFromLocalDBEvent {@link LoadChordShapesFromLocalDBEvent}
+     */
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onLoadChordShapesFromLocalDBEvent(LoadChordShapesFromLocalDBEvent loadChordShapesFromLocalDBEvent){
         PlayShapeActivityManager playShapeActivityManager = getPlayShapeActivityManager();
@@ -119,6 +125,10 @@ public class PlayShapeActivity extends AppCompatActivity implements PlayShapeAct
         }
     }
 
+    /**
+     * Hanldes {@link ChordShapesListReadyEvent}. Shows {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.fragments.PlayShapesFragment}
+     * @param chordShapesListReadyEvent {@link ChordShapesListReadyEvent}
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onChordShapesListReadyEvent(ChordShapesListReadyEvent chordShapesListReadyEvent){
         Log.i(TAG, "onChordShapesListReadyEvent");

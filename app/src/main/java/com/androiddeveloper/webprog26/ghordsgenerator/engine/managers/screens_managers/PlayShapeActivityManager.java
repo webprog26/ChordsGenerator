@@ -15,19 +15,22 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 
 /**
- * Created by webpr on 01.06.2017.
+ * Manages {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.fragments.PlayShapesFragment} loading and
+ * {@link com.androiddeveloper.webprog26.ghordsgenerator.PlayShapeActivity} control buttons state, forward and backward current chord chapes changes
  */
 
 public class PlayShapeActivityManager extends ScreenManager{
 
     private static final String TAG = "PSActivityManager";
 
+    //For now every com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord has 5 shapes
     private static final int SHAPES_PER_CHORD_COUNT = 5;
 
     private final ChordInfoHolder mChordInfoHolder;
     private final PlayShapeActivityControlsEnabler mPlayShapeActivityControlsEnabler;
     private ArrayList<ChordShape> mChordShapes = new ArrayList<>();
 
+    //by default show first ChordShape
     private int currentShapePosition = 0;
 
     public PlayShapeActivityManager(FragmentManager mFragmentManager, int containerViewId, ChordInfoHolder mChordInfoHolder, PlayShapeActivityControlsEnabler mPlayShapeActivityControlsEnabler) {
@@ -52,6 +55,9 @@ public class PlayShapeActivityManager extends ScreenManager{
         }
     }
 
+    /**
+     * Forward to next {@link ChordShape}
+     */
     public void setNextPlayableShape(){
         if(isNextPlayableShapeEnabled()){
             setCurrentShapePosition(getCurrentShapePosition() + 1);
@@ -61,6 +67,9 @@ public class PlayShapeActivityManager extends ScreenManager{
         }
     }
 
+    /**
+     * Backward to previous {@link ChordShape}
+     */
     public void setPreviousPlayableShape(){
         if(isPreviousPlayableShapeEnabled()){
             setCurrentShapePosition(getCurrentShapePosition() - 1);
@@ -70,11 +79,11 @@ public class PlayShapeActivityManager extends ScreenManager{
         }
     }
 
-    public int getCurrentShapePosition() {
+    private int getCurrentShapePosition() {
         return currentShapePosition;
     }
 
-    public void setCurrentShapePosition(int currentShapePosition) {
+    private void setCurrentShapePosition(int currentShapePosition) {
         this.currentShapePosition = currentShapePosition;
     }
 
@@ -82,6 +91,9 @@ public class PlayShapeActivityManager extends ScreenManager{
         return mChordInfoHolder;
     }
 
+    /**
+     * Start loading chord shapes from local {@link android.database.sqlite.SQLiteDatabase}
+     */
     public void loadChordShapesFromLocalDB(){
         Log.i(TAG, "loadChordShapesFromLocalDB");
         EventBus.getDefault().post(new LoadChordShapesFromLocalDBEvent());
@@ -91,6 +103,11 @@ public class PlayShapeActivityManager extends ScreenManager{
         return mChordShapes;
     }
 
+    /**
+     * Sets loaded from {@link android.database.sqlite.SQLiteDatabase} to {@link ArrayList}
+     * to give user possibility to switch beetween them
+     * @param chordShapes {@link ArrayList}
+     */
     public void setChordShapes(ArrayList<ChordShape> chordShapes) {
         this.mChordShapes = chordShapes;
         EventBus.getDefault().post(new ChordShapesListReadyEvent());

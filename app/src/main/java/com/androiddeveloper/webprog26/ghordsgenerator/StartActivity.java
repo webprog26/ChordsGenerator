@@ -95,9 +95,11 @@ public class StartActivity extends AppCompatActivity {
         if(sharedPreferences != null){
 
             if(!sharedPreferences.getBoolean(IS_JSON_HAS_BEEN_READ_TAG, false)){
+                //this is first launch or app's data was deleted, so we should read it from JSON
 
                 LinearLayout llLoading = getLlLoading();
 
+                //show ProgressBar
                 if(llLoading.getVisibility() == View.INVISIBLE){
                     llLoading.setVisibility(View.VISIBLE);
                 }
@@ -107,7 +109,7 @@ public class StartActivity extends AppCompatActivity {
                 EventBus.getDefault().post(new ReadJSONDataEvent());
 
             } else {
-
+                //app data exists, enable user to process
                 if(!btnGo.isEnabled()){
                     btnGo.setEnabled(true);
                 }
@@ -121,11 +123,19 @@ public class StartActivity extends AppCompatActivity {
         super.onStop();
     }
 
+    /**
+     * Handles {@link ReadJSONDataEvent}. Starts reading data from JSON file in assets directory
+     * @param readJSONDataEvent {@link ReadJSONDataEvent}
+     */
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onReadJSONDataEvent(ReadJSONDataEvent readJSONDataEvent){
         getAppDataManager().readJSONData();
     }
 
+    /**
+     * Handles {@link JSONDataHasBeenReadEvent}. Start converting read data to POJO classes
+     * @param jsonDataHasBeenReadEvent {@link JSONDataHasBeenReadEvent}
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onJSONDataHasBeenReadEvent(JSONDataHasBeenReadEvent jsonDataHasBeenReadEvent){
         Log.i(TAG, "onJSONDataHasBeenReadEvent");
@@ -136,13 +146,21 @@ public class StartActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Handles {@link ConvertDataToPOJOClassesEvent}. Converts data to POJO classes
+     * @param convertDataToPOJOClassesEvent {@link ConvertDataToPOJOClassesEvent}
+     */
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onConvertDataToPOJOClassesEvent(ConvertDataToPOJOClassesEvent convertDataToPOJOClassesEvent){
         Log.i(TAG, "onConvertDataToPOJOClassesEvent");
         getAppDataManager().convertJSONDateToPOJOClasses(convertDataToPOJOClassesEvent.getJsonString());
     }
 
+    /**
+     * Handles {@link DataHasBeenConvertedToPOJOsEvent}. Starts uploading data to local {@link android.database.sqlite.SQLiteDatabase}
+     * and shows {@link ProgressBar}
+     * @param dataHasBeenConvertedToPOJOsEvent {@link DataHasBeenConvertedToPOJOsEvent}
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDataHasBeenConvertedToPOJOsEvent(DataHasBeenConvertedToPOJOsEvent dataHasBeenConvertedToPOJOsEvent){
         Log.i(TAG, "onDataHasBeenConvertedToPOJOsEvent");
@@ -174,11 +192,19 @@ public class StartActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Handles {@link AddChordsToLocalDbEvent}. Adds chords and their shapes to local {@link android.database.sqlite.SQLiteDatabase}
+     * @param addChordsToLocalDbEvent {@link AddChordsToLocalDbEvent}
+     */
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onAddChordsToLocalDbEvent(AddChordsToLocalDbEvent addChordsToLocalDbEvent){
         getAppDataManager().addChordsToLocalDB(addChordsToLocalDbEvent.getChords());
     }
 
+    /**
+     * Handles {@link SingleChordLoadedToLocalDBEvent}. Updates {@link ProgressBar}
+     * @param singleChordLoadedToLocalDBEvent {@link SingleChordLoadedToLocalDBEvent}
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSingleChordLoadedToLocalDBEvent(SingleChordLoadedToLocalDBEvent singleChordLoadedToLocalDBEvent){
         AppDataManager appDataManager = getAppDataManager();
@@ -190,6 +216,11 @@ public class StartActivity extends AppCompatActivity {
         Log.i(TAG, "getPbLoading().getProgress(): " + getPbLoading().getProgress());
     }
 
+    /**
+     * Handles {@link ChordsUploadedToDatabaseEvent}. Hides {@link ProgressBar}, makes btnGo enabled,
+     * so user can process with the app
+     * @param chordsUploadedToDatabaseEvent {@link ChordsUploadedToDatabaseEvent}
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onChordsUploadedToDatabaseEvent(ChordsUploadedToDatabaseEvent chordsUploadedToDatabaseEvent){
 

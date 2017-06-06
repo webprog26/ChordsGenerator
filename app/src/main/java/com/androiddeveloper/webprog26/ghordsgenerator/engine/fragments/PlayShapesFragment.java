@@ -118,7 +118,7 @@ public class PlayShapesFragment extends Fragment {
                 mPlayShapeFragmentManager.createSoundPool();
 
                 //initializing notes with drawables
-                mPlayShapeFragmentManager.initNotesWithDrawables();
+                mPlayShapeFragmentManager.initNotesWithDrawablesAndSounds();
                 Log.i(TAG, "in PlayShapesFragment chord shape is " + chordShape.toString());
 
                if(mFretViewsHelper == null){
@@ -137,7 +137,7 @@ public class PlayShapesFragment extends Fragment {
             //Releasing SoundPool resources
             playShapeFragmentManager.releaseSoundPool();
             //Removing notes drawables
-            playShapeFragmentManager.removeDrawablesFromNotes();
+            playShapeFragmentManager.removeDrawablesAndSoundsFromNotes();
 
             if(mFretViewsHelper != null){
                 //Removing notes images
@@ -169,7 +169,7 @@ public class PlayShapesFragment extends Fragment {
     /**
      * Handles {@link InitNotesWithDrawablesEvent} Calls {@link PlayShapeFragmentManager} to add drawables
      * to the {@link ChordShape} notes
-     * @param initNotesWithDrawablesEvent
+     * @param initNotesWithDrawablesEvent {@link InitNotesWithDrawablesEvent}
      */
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onInitNotesWithDrawablesEvent(InitNotesWithDrawablesEvent initNotesWithDrawablesEvent){
@@ -177,7 +177,7 @@ public class PlayShapesFragment extends Fragment {
 
         if(playShapeFragmentManager != null){
 
-            playShapeFragmentManager.setDrawablesToNotes();
+            playShapeFragmentManager.setDrawablesAndSoundsToNotes();
 
         }
     }
@@ -185,7 +185,7 @@ public class PlayShapesFragment extends Fragment {
     /**
      * Actually main method of the class. Handles {@link NotesInitializedWithDrawablesEvent} which
      * means that notes are completely ready to be showed, played and (or) clicked
-     * @param notesInitializedWithDrawablesEvent
+     * @param notesInitializedWithDrawablesEvent {@link InitNotesWithDrawablesEvent}
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNotesInitializedWithDrawablesEvent(NotesInitializedWithDrawablesEvent notesInitializedWithDrawablesEvent){

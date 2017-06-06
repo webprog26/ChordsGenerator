@@ -12,7 +12,8 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.UIMessageHe
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord;
 
 /**
- * Created by webpr on 31.05.2017.
+ * Manages {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.fragments.ChordShapesFragment}
+ * loading and {@link ReferenceDialog} showing
  */
 
 public class MainAppScreenManager extends ScreenManager{
@@ -65,7 +66,7 @@ public class MainAppScreenManager extends ScreenManager{
         return mContext;
     }
 
-    public UIMessageHelper getUiMessageHelper() {
+    private UIMessageHelper getUiMessageHelper() {
         return mUiMessageHelper;
     }
 

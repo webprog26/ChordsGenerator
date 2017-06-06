@@ -3,7 +3,7 @@ package com.androiddeveloper.webprog26.ghordsgenerator.engine.models;
 import java.util.ArrayList;
 
 /**
- * Created by webpr on 31.05.2017.
+ * Chord POJO class
  */
 
 public class Chord {

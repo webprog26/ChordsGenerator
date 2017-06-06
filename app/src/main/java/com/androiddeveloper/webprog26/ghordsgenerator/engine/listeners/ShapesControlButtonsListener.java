@@ -7,7 +7,7 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.screens_ma
 
 
 /**
- * Created by webpr on 18.05.2017.
+ * Shapes control buttons of {@link com.androiddeveloper.webprog26.ghordsgenerator.PlayShapeActivity} listener
  */
 
 public class ShapesControlButtonsListener implements View.OnClickListener {

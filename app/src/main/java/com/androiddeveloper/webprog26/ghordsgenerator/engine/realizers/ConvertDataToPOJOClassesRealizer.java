@@ -16,7 +16,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by webpr on 31.05.2017.
+ * Converts data from JSON to POJO classes
  */
 
 public class ConvertDataToPOJOClassesRealizer implements Realizer {

@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Created by webpr on 31.05.2017.
+ * Reads data from JSON in assets
  */
 
 public class ReadJSONRealizer implements Realizer{
@@ -38,12 +38,14 @@ public class ReadJSONRealizer implements Realizer{
         EventBus.getDefault().post(new JSONDataHasBeenReadEvent(loadJSONFromAsset(getAssetManager(), JSON_FILE_NAME)));
     }
 
+
     /**
      * Reads .json file directly from assets directory and transform it into the {@link String}
      * @param assetManager {@link AssetManager}
      * @param jsonFilename {@link String}
      * @return {@link String}
      */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private String loadJSONFromAsset(AssetManager assetManager, String jsonFilename) {
         Log.i(TAG, "loadJSONFromAsset()");
         String json;

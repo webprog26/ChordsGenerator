@@ -23,7 +23,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by webpr on 01.06.2017.
+ * Manages {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.fragments.PlayShapesFragment}
+ * operations
  */
 
 public class PlayShapeFragmentManager implements NotePlayer{
@@ -48,6 +49,8 @@ public class PlayShapeFragmentManager implements NotePlayer{
 
         initBarPlaces();
 
+//Uncomment to see GuitarString loading logs
+//*********************************************************************************************************************************
 //        for(int i = 0; i < Fretboard.STRINGS_COUNT; i++){
 //
 //            GuitarString guitarString = getFretboard().getGuitarString(i);
@@ -58,15 +61,21 @@ public class PlayShapeFragmentManager implements NotePlayer{
 //                Log.i(TAG, guitarString.getTitle() + " has note " + guitarString.getNote().getNoteTitle());
 //            }
 //        }
-
+//*********************************************************************************************************************************
     }
 
-    public void initNotesWithDrawables(){
+    /**
+     * Starts initialization notes with drawables and sounds
+     */
+    public void initNotesWithDrawablesAndSounds(){
         EventBus.getDefault().post(new InitNotesWithDrawablesEvent());
     }
 
+    /**
+     * Sets drawables and sounds to current {@link ChordShape} notes
+     */
     @SuppressWarnings("deprecation")
-    public void setDrawablesToNotes(){
+    public void setDrawablesAndSoundsToNotes(){
         ChordShape chordShape = getChordShape();
 
         if(chordShape != null){
@@ -84,26 +93,32 @@ public class PlayShapeFragmentManager implements NotePlayer{
                         if(note != null){
                             Log.i(TAG, "finger index " + note.getNoteFingerIndex());
 
-                            if(note.getNoteFingerIndex() != 0){
+                            if(note.getNoteFingerIndex() != 0){//not a "free string" note
 
                                 note.setNoteTitleDrawable(resources.getDrawable(NoteBitmapsHelper.getNoteDrawable(note.getNoteTitle())));
                                 note.setNoteFingerIndexDrawable(resources.getDrawable(FingerIndexDrawableIDHelper.getFingerIndexDrawableId(note.getNoteFingerIndex())));
 
                             }
+                            //inits notes of current ChordShape with their sounds predefined in JSON
                             initNoteWithSound(note);
                         }
                     }
                 }
             }
         }
-
+        //inits "fretboard strings" with notes
         initFretboardStringsWithNotes();
 
+        //Notifying PlayShapesFragment that notes and "guitar strings" have been initialized successfully
         EventBus.getDefault().post(new NotesInitializedWithDrawablesEvent());
     }
 
+    /**
+     * Starts removing drawables and sounds from notes to avoid device unnecessary memory using
+     * when app is not in the foreground state
+     */
     @SuppressWarnings("deprecation")
-    public void removeDrawablesFromNotes(){
+    public void removeDrawablesAndSoundsFromNotes(){
         ChordShape chordShape = getChordShape();
 
         if(chordShape != null){
@@ -147,6 +162,9 @@ public class PlayShapeFragmentManager implements NotePlayer{
         return mChordShape;
     }
 
+    /**
+     * Inits "fretboard strings" with notes
+     */
     private void initFretboardStringsWithNotes(){
 
         ArrayList<Note> notes = getChordShape().getNotes();
@@ -178,6 +196,10 @@ public class PlayShapeFragmentManager implements NotePlayer{
         }
     }
 
+    /**
+     * Removes sound from single {@link Note}
+     * @param note {@link Note}
+     */
     private void removeSoundFromNote(Note note){
 
         if(note != null){
@@ -191,6 +213,9 @@ public class PlayShapeFragmentManager implements NotePlayer{
         }
     }
 
+    /**
+     * Inits {@link ChordShape} bar depending on JSON info if current shape has one
+     */
     private void initBarPlaces(){
         ChordShape chordShape = getChordShape();
 
@@ -217,6 +242,9 @@ public class PlayShapeFragmentManager implements NotePlayer{
     }
 
 
+    /**
+     * Release resources using by {@link SoundPool}
+     */
     public void releaseSoundPool(){
         SoundPool soundPool = getSoundPool();
         if(soundPool != null){
@@ -225,6 +253,9 @@ public class PlayShapeFragmentManager implements NotePlayer{
         }
     }
 
+    /**
+     * Creates {@link SoundPool} if needed
+     */
     @SuppressWarnings("deprecation")
     public void createSoundPool(){
         SoundPool soundPool = getSoundPool();
@@ -233,6 +264,10 @@ public class PlayShapeFragmentManager implements NotePlayer{
         }
     }
 
+    /**
+     * Inits single note with sound
+     * @param note {@link Note}
+     */
     private void initNoteWithSound(Note note){
 
         if(note != null){
@@ -266,6 +301,12 @@ public class PlayShapeFragmentManager implements NotePlayer{
 
     }
 
+    /**
+     * Inits current String with it's coordinates: left side (startX), right side (endX)
+     * @param startX float
+     * @param endX float
+     * @param index int
+     */
     public void setStringsCoordinates(float startX, float endX, int index){
         Log.i(TAG, "setStringsCoordinates " + "start " + startX + " end " + endX + " index " + index);
         GuitarString guitarString = getFretboard().getGuitarString(index);
@@ -273,6 +314,13 @@ public class PlayShapeFragmentManager implements NotePlayer{
         guitarString.setEndX(endX);
     }
 
+    /**
+     * Inits "guitar string" playable height depending on it's "pressing" position. It means that
+     * "free" "guitar string" will accept touches at any place of "guitar fretboard", but the pressed
+     * one will not accept touches behind the place it was pressed, in our case behind the place note is located
+     * @param playableY float
+     * @param index int
+     */
     public void setStringPlayableY(float playableY, int index){
         GuitarString guitarString = getFretboard().getGuitarString(index);
         guitarString.setPlayableY(playableY);

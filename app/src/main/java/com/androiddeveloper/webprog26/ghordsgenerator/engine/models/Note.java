@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable;
 import java.io.Serializable;
 
 /**
- * Created by webpr on 31.05.2017.
+ * Note POJO class
  */
 
 public class Note implements Serializable{

@@ -9,7 +9,7 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Note;
 
 
 /**
- * Fret touches listener
+ * "Fretboard" touches listener
  */
 
 public class FretTouchListener implements View.OnTouchListener {

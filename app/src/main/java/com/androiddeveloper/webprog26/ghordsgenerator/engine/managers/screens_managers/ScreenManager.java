@@ -6,7 +6,7 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.ShapesFr
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord;
 
 /**
- * Created by webpr on 01.06.2017.
+ * Abstract pattern for app's screens managers
  */
 
 public abstract class ScreenManager implements ShapesFragmentLoader{
@@ -14,12 +14,13 @@ public abstract class ScreenManager implements ShapesFragmentLoader{
     private final FragmentManager mFragmentManager;
     private final int containerViewId;
 
-    public ScreenManager(FragmentManager mFragmentManager, int containerViewId) {
+    ScreenManager(FragmentManager mFragmentManager, int containerViewId) {
         this.mFragmentManager = mFragmentManager;
         this.containerViewId = containerViewId;
     }
 
-    public FragmentManager getFragmentManager() {
+
+    FragmentManager getFragmentManager() {
         return mFragmentManager;
     }
 

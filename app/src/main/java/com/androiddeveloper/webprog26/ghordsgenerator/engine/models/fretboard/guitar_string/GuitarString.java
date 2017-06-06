@@ -4,7 +4,7 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Note;
 
 
 /**
- * Created by webpr on 23.05.2017.
+ * Guitar string POJO classw
  */
 
 public class GuitarString {
