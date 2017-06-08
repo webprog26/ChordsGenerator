@@ -54,14 +54,13 @@ public class NoteClickListener implements View.OnClickListener {
 
                 if(!note.isFingerIndexVisible()){
                     noteImageDrawable = note.getNoteFingerIndexDrawable();
-                    note.setFingerIndexVisible(true);
                 } else {
                     noteImageDrawable = note.getNoteTitleDrawable();
-                    note.setFingerIndexVisible(false);
                 }
 
                 if(noteImageDrawable != null){
                     noteImageView.setImageDrawable(noteImageDrawable);
+                    note.setFingerIndexVisible(!note.isFingerIndexVisible());
                 }
             }
         });
