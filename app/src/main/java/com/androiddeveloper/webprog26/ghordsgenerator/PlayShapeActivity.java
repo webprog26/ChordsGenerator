@@ -43,6 +43,9 @@ public class PlayShapeActivity extends AppCompatActivity implements PlayShapeAct
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_shape);
+
+
+
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
 

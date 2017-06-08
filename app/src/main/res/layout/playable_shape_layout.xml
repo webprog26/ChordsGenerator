@@ -7,7 +7,8 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:columnCount="6"
-    android:rowCount="5">
+    android:rowCount="5"
+    android:animateLayoutChanges="true">
 
     <include
         android:id="@+id/sixth_string"

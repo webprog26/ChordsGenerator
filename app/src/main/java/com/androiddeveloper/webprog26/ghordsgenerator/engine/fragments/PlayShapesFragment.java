@@ -199,7 +199,9 @@ public class PlayShapesFragment extends Fragment {
             if(chordShape != null){
 
                 //Show ChordShape's start fret position number
-                getTvFretToStart().setText(FretNumbersTransformHelper.getFretToStartString(chordShape.getStartFretPosition()));
+                getTvFretToStart().setText(FretNumbersTransformHelper.getFretToStartString(chordShape.getStartFretPosition())
+                                           + "\n"
+                                           + getString(R.string.fret));
 
                 if(mFretViewsHelper != null){
 

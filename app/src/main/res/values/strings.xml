@@ -17,7 +17,7 @@
 
     <string name="btn_next">Next</string>
     <string name="btn_previous">Prev</string>
-    <string name="starts_at_fret">Starts at fret</string>
+    <string name="fret">fret</string>
 
     <!--Chords titles-->
     <string-array name="chords_titles">

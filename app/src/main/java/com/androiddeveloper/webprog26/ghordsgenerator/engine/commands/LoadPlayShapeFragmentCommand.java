@@ -32,9 +32,9 @@ public class LoadPlayShapeFragmentCommand extends LoadFragmentCommand {
         PlayShapesFragment playShapesFragment = (PlayShapesFragment) fragmentManager.findFragmentByTag(PLAY_SHAPE_FRAGMENT_TAG);
 
         if(playShapesFragment != null){
-            fragmentManager.beginTransaction().replace(getContainerViewId(), PlayShapesFragment.newInstance(getChordShape()), PLAY_SHAPE_FRAGMENT_TAG).commit();
+            fragmentManager.beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).replace(getContainerViewId(), PlayShapesFragment.newInstance(getChordShape()), PLAY_SHAPE_FRAGMENT_TAG).commit();
         } else {
-            fragmentManager.beginTransaction().add(getContainerViewId(), PlayShapesFragment.newInstance(getChordShape()), PLAY_SHAPE_FRAGMENT_TAG).commit();
+            fragmentManager.beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).add(getContainerViewId(), PlayShapesFragment.newInstance(getChordShape()), PLAY_SHAPE_FRAGMENT_TAG).commit();
         }
     }
 

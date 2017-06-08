@@ -28,9 +28,9 @@ public class LoadChordShapesFragmentCommand extends LoadFragmentCommand {
         ChordShapesFragment chordShapesFragment = (ChordShapesFragment) fragmentManager.findFragmentByTag(CHORD_SHAPES_FRAGMENT_TAG);
 
         if(chordShapesFragment != null){
-            fragmentManager.beginTransaction().replace(getContainerViewId(), ChordShapesFragment.newInstance(getChordShapesTitle()), CHORD_SHAPES_FRAGMENT_TAG).commit();
+            fragmentManager.beginTransaction().setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right).replace(getContainerViewId(), ChordShapesFragment.newInstance(getChordShapesTitle()), CHORD_SHAPES_FRAGMENT_TAG).commit();
         } else {
-            fragmentManager.beginTransaction().add(getContainerViewId(), ChordShapesFragment.newInstance(getChordShapesTitle()), CHORD_SHAPES_FRAGMENT_TAG).commit();
+            fragmentManager.beginTransaction().setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right).add(getContainerViewId(), ChordShapesFragment.newInstance(getChordShapesTitle()), CHORD_SHAPES_FRAGMENT_TAG).commit();
         }
     }
 
