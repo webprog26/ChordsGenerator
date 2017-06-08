@@ -35,18 +35,12 @@ public class NoteClickListener implements View.OnClickListener {
 
         if(note != null){
 
-            animateChanges((ImageView) v, note);
+            getNoteImageFadeAnimatorSet((ImageView) v, note).start();
         }
     }
 
     private Note getNote() {
         return note;
-    }
-
-    private void animateChanges(final ImageView noteImageView, final Note note){
-
-        AnimatorSet noteAnimatorSet = getNoteImageFadeAnimatorSet(noteImageView, note);
-        noteAnimatorSet.start();
     }
 
     private ObjectAnimator getNoteImageFadeOutAnimator(final ImageView noteImageView, final Note note){
