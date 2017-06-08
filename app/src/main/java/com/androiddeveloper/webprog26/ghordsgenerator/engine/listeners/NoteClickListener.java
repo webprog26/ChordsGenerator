@@ -20,6 +20,8 @@ public class NoteClickListener implements View.OnClickListener {
 
     private final String TAG = "NoteClickListener";
 
+    private static final int NOTE_IMAGE_FADE_ANIMATION_DURATION = 200;
+
     private final Note note;
 
     public NoteClickListener(Note note) {
@@ -42,6 +44,12 @@ public class NoteClickListener implements View.OnClickListener {
     }
 
     private void animateChanges(final ImageView noteImageView, final Note note){
+
+        AnimatorSet noteAnimatorSet = getNoteImageFadeAnimatorSet(noteImageView, note);
+        noteAnimatorSet.start();
+    }
+
+    private ObjectAnimator getNoteImageFadeOutAnimator(final ImageView noteImageView, final Note note){
         ObjectAnimator fadeOutAnimator = ObjectAnimator.ofFloat(noteImageView, View.ALPHA, 1f, 0);
         fadeOutAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -64,13 +72,23 @@ public class NoteClickListener implements View.OnClickListener {
                 }
             }
         });
-        fadeOutAnimator.setDuration(200);
+        fadeOutAnimator.setDuration(NOTE_IMAGE_FADE_ANIMATION_DURATION);
+
+        return fadeOutAnimator;
+    }
+
+    private ObjectAnimator getNoteImageFadeInAnimator(final ImageView noteImageView){
         ObjectAnimator fadeInAnimator = ObjectAnimator.ofFloat(noteImageView, View.ALPHA, 0, 1f);
         fadeInAnimator.setDuration(200);
 
+        return fadeInAnimator;
+    }
+
+    private AnimatorSet getNoteImageFadeAnimatorSet(final ImageView noteImageView, final Note note){
         AnimatorSet noteAnimatorSet = new AnimatorSet();
-        noteAnimatorSet.playSequentially(fadeOutAnimator, fadeInAnimator);
+        noteAnimatorSet.playSequentially(getNoteImageFadeOutAnimator(noteImageView, note), getNoteImageFadeInAnimator(noteImageView));
         noteAnimatorSet.setInterpolator(new LinearInterpolator());
-        noteAnimatorSet.start();
+
+        return noteAnimatorSet;
     }
 }
