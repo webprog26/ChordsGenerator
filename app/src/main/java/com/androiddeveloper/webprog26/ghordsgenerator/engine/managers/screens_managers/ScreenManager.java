@@ -19,6 +19,9 @@ public abstract class ScreenManager implements ShapesFragmentLoader{
         this.containerViewId = containerViewId;
     }
 
+    public abstract void onStart();
+    public abstract void onStop();
+
 
     FragmentManager getFragmentManager() {
         return mFragmentManager;

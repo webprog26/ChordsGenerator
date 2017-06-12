@@ -5,10 +5,12 @@ import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.commands.LoadChordShapesFragmentCommand;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.events_handlers.MainAppEventsHandler;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.fragments.dialogs.ReferenceDialog;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.ChordSecondTitleHelper;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.ShapeTableNameHelper;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.UIMessageHelper;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.OnChordShapeImageClickCallback;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord;
 
 /**
@@ -26,17 +28,30 @@ public class MainAppScreenManager extends ScreenManager{
     private final ShapeTableNameHelper mShapeTableNameHelper;
     private final ChordSecondTitleHelper mChordSecondTitleHelper;
 
+    private final MainAppEventsHandler mainAppEventsHandler;
+
     private Chord mCurrentChord;
 
-    public MainAppScreenManager(FragmentManager mFragmentManager, int containerViewId, Context context) {
+    public MainAppScreenManager(FragmentManager mFragmentManager, int containerViewId, Context context, OnChordShapeImageClickCallback onChordShapeImageClickCallback) {
         super(mFragmentManager, containerViewId);
         this.mContext = context;
 
         this.mUiMessageHelper = new UIMessageHelper(this);
         this.mShapeTableNameHelper = new ShapeTableNameHelper(context.getResources());
         this.mChordSecondTitleHelper = new ChordSecondTitleHelper(context.getResources());
+        this.mainAppEventsHandler = new MainAppEventsHandler(onChordShapeImageClickCallback);
     }
 
+
+    @Override
+    public void onStart() {
+        getMainAppEventsHandler().subscribe();
+    }
+
+    @Override
+    public void onStop() {
+        getMainAppEventsHandler().unsubscribe();
+    }
 
     public void sendUiMessage(final Chord chord, final String toChord){
         getUiMessageHelper().sendUiWrongChordMessage(chord.getChordTitle(), toChord);
@@ -76,5 +91,9 @@ public class MainAppScreenManager extends ScreenManager{
 
     public ChordSecondTitleHelper getChordSecondTitleHelper() {
         return mChordSecondTitleHelper;
+    }
+
+    private MainAppEventsHandler getMainAppEventsHandler() {
+        return mainAppEventsHandler;
     }
 }

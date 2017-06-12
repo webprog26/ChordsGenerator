@@ -42,6 +42,15 @@ public class PlayShapeActivityManager extends ScreenManager{
         changeControlsEnabledState();
     }
 
+    @Override
+    public void onStart() {
+
+    }
+
+    @Override
+    public void onStop() {
+
+    }
 
     @Override
     public void setPlayableShapeFragment() {

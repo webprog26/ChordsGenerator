@@ -6,21 +6,17 @@ import android.os.Bundle;
 import android.support.v7.widget.AppCompatSpinner;
 import android.util.Log;
 
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.ChordShapeImageClickEvent;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.OnChordShapeImageClickCallback;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.screens_managers.MainAppScreenManager;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.SpinnerReseter;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.listeners.SpinnerListener;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordInfoHolder;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements SpinnerReseter{
+public class MainActivity extends AppCompatActivity implements SpinnerReseter, OnChordShapeImageClickCallback{
 
     private static final String TAG = "MainActivity_TAG";
 
@@ -43,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements SpinnerReseter{
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        mainAppScreenManager = new MainAppScreenManager(getSupportFragmentManager(), R.id.fl_content, this);
+        mainAppScreenManager = new MainAppScreenManager(getSupportFragmentManager(), R.id.fl_content, this, this);
 
         //Initializing SpinnerListener instance
 
@@ -70,58 +66,41 @@ public class MainActivity extends AppCompatActivity implements SpinnerReseter{
     @Override
     protected void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        getMainAppScreenManager().onStart();
     }
 
     @Override
     protected void onStop() {
-        EventBus.getDefault().unregister(this);
+        getMainAppScreenManager().onStop();
         super.onStop();
     }
 
-    /**
-     * Handles {@link ChordShapeImageClickEvent}. Starts {@link PlayShapeActivity} and packs in it's Intent {@link ChordInfoHolder}
-     * that contains {@link Chord} data
-     * @param chordShapeImageClickEvent {@link ChordShapeImageClickEvent}
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onChordShapeImageClickEvent(ChordShapeImageClickEvent chordShapeImageClickEvent){
-        Log.i(TAG, "onChordShapeImageClickEvent");
+    @Override
+    public void resetChordsParamsSpinner() {
+        getSpChordAlteration().setSelection(DEFAULT_SPINNER_POSITION);
+    }
+
+    @Override
+    public void onChordImageClicked(int position) {
         final MainAppScreenManager mainAppScreenManager = getMainAppScreenManager();
 
         if(mainAppScreenManager != null){
 
             String chordTitle = mainAppScreenManager.getCurrentChord().getChordTitle();
 
-            Object eventObject = chordShapeImageClickEvent.getEventObject();
-            int clickedShapePosition = -1;
-
-            if(eventObject instanceof Integer){
-                clickedShapePosition = (int) eventObject;
-            }
-
-            if(clickedShapePosition != -1){
+            if(position != -1){
 
                 Intent playShapeIntent = new Intent(MainActivity.this, PlayShapeActivity.class);
                 playShapeIntent.putExtra(PlayShapeActivity.CHORD_INFO_HOLDER, new ChordInfoHolder(
                         chordTitle,
                         mainAppScreenManager.getChordSecondTitleHelper().getChordSecondTitle(chordTitle),
-                        clickedShapePosition,
+                        position,
                         mainAppScreenManager.getShapeTableNameHelper().getChordShapesTableName(chordTitle)
                 ));
                 startActivity(playShapeIntent);
                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-
             }
-
         }
-
-
-    }
-
-    @Override
-    public void resetChordsParamsSpinner() {
-        getSpChordAlteration().setSelection(DEFAULT_SPINNER_POSITION);
     }
 
     @Override
