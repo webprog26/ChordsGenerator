@@ -6,6 +6,7 @@ import android.util.Log;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.commands.LoadPlayShapeFragmentCommand;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.ChordShapesListReadyEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.LoadChordShapesFromLocalDBEvent;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.events_handlers.PlayAppEventsHandler;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.PlayShapeActivityControlsEnabler;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordInfoHolder;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape;
@@ -29,27 +30,37 @@ public class PlayShapeActivityManager extends ScreenManager{
     private final ChordInfoHolder mChordInfoHolder;
     private final PlayShapeActivityControlsEnabler mPlayShapeActivityControlsEnabler;
     private ArrayList<ChordShape> mChordShapes = new ArrayList<>();
+    private final PlayAppEventsHandler mPlayAppEventsHandler;
 
     //by default show first ChordShape
     private int currentShapePosition = 0;
 
-    public PlayShapeActivityManager(FragmentManager mFragmentManager, int containerViewId, ChordInfoHolder mChordInfoHolder, PlayShapeActivityControlsEnabler mPlayShapeActivityControlsEnabler) {
+    public PlayShapeActivityManager(FragmentManager mFragmentManager, int containerViewId,
+                                    ChordInfoHolder mChordInfoHolder,
+                                    PlayShapeActivityControlsEnabler mPlayShapeActivityControlsEnabler) {
         super(mFragmentManager, containerViewId);
         this.mChordInfoHolder = mChordInfoHolder;
         this.currentShapePosition = mChordInfoHolder.getClickedShapePosition();
         this.mPlayShapeActivityControlsEnabler = mPlayShapeActivityControlsEnabler;
+
+
+        this.mPlayAppEventsHandler = new PlayAppEventsHandler(this);
 
         changeControlsEnabledState();
     }
 
     @Override
     public void onStart() {
+        getPlayAppEventsHandler().subscribe();
+    }
 
+    public void onResume(){
+        loadChordShapesFromLocalDB();
     }
 
     @Override
     public void onStop() {
-
+        getPlayAppEventsHandler().unsubscribe();
     }
 
     @Override
@@ -137,5 +148,9 @@ public class PlayShapeActivityManager extends ScreenManager{
 
     private PlayShapeActivityControlsEnabler getPlayShapeActivityControlsEnabler() {
         return mPlayShapeActivityControlsEnabler;
+    }
+
+    private PlayAppEventsHandler getPlayAppEventsHandler() {
+        return mPlayAppEventsHandler;
     }
 }

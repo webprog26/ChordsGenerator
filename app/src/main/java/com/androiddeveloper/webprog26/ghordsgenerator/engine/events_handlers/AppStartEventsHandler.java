@@ -10,6 +10,7 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.DataHasBeenC
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.JSONDataHasBeenReadEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.ReadJSONDataEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.SingleChordLoadedToLocalDBEvent;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.EventObjectsCastChecker;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.StartEventsCallback;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.app_data_manager.AppDataManager;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord;
@@ -65,7 +66,7 @@ public class AppStartEventsHandler extends AppEventsHandler {
         Object eventObject = jsonDataHasBeenReadEvent.getEventObject();
         String resultString = null;
 
-        if(eventObject instanceof String){
+        if(EventObjectsCastChecker.isString(eventObject)){
             resultString = (String) eventObject;
         }
 
@@ -84,7 +85,7 @@ public class AppStartEventsHandler extends AppEventsHandler {
         Object eventObject = convertDataToPOJOClassesEvent.getEventObject();
         String jsonString = null;
 
-        if(eventObject instanceof String){
+        if(EventObjectsCastChecker.isString(eventObject)){
             jsonString = (String) eventObject;
         }
 
@@ -105,7 +106,7 @@ public class AppStartEventsHandler extends AppEventsHandler {
         Object eventObject = dataHasBeenConvertedToPOJOsEvent.getEventObject();
         ArrayList<Chord> chords = null;
 
-        if(eventObject instanceof ArrayList){
+        if(EventObjectsCastChecker.isArrayList(eventObject)){
 
             chords = (ArrayList<Chord>) eventObject;
         }
@@ -146,7 +147,7 @@ public class AppStartEventsHandler extends AppEventsHandler {
         Object eventObject = addChordsToLocalDbEvent.getEventObject();
         ArrayList<Chord> chords = null;
 
-        if(eventObject instanceof ArrayList){
+        if(EventObjectsCastChecker.isArrayList(eventObject)){
             chords = (ArrayList<Chord>) eventObject;
         }
 
@@ -164,7 +165,7 @@ public class AppStartEventsHandler extends AppEventsHandler {
         Object eventObject = singleChordLoadedToLocalDBEvent.getEventObject();
         String chordTitle = null;
 
-        if(eventObject instanceof String){
+        if(EventObjectsCastChecker.isString(eventObject)){
             chordTitle = (String) eventObject;
         }
 

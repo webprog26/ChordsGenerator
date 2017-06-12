@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.androiddeveloper.webprog26.ghordsgenerator.PlayShapeActivity;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.ChordShapeImageClickEvent;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.EventObjectsCastChecker;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.OnChordShapeImageClickCallback;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.screens_managers.MainAppScreenManager;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord;
@@ -48,7 +49,7 @@ public class MainAppEventsHandler extends AppEventsHandler {
         Object eventObject = chordShapeImageClickEvent.getEventObject();
         int clickedShapePosition = -1;
 
-        if(eventObject instanceof Integer){
+        if(EventObjectsCastChecker.isInteger(eventObject)){
             clickedShapePosition = (int) eventObject;
         }
 

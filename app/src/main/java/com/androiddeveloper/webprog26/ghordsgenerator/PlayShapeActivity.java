@@ -7,17 +7,10 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.chords_generator_app.ChordsGeneratorApp;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.ChordShapesListReadyEvent;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.LoadChordShapesFromLocalDBEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.PlayShapeActivityControlsEnabler;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.listeners.ShapesControlButtonsListener;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.screens_managers.PlayShapeActivityManager;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordInfoHolder;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,7 +40,7 @@ public class PlayShapeActivity extends AppCompatActivity implements PlayShapeAct
 
 
         ButterKnife.bind(this);
-        EventBus.getDefault().register(this);
+
 
         Intent receivedIntent = getIntent();
         //Unpacking received ChordInfoHolder
@@ -81,8 +74,24 @@ public class PlayShapeActivity extends AppCompatActivity implements PlayShapeAct
 
         getBtnNext().setOnClickListener(mShapesControlButtonsListener);
         getBtnPrevious().setOnClickListener(mShapesControlButtonsListener);
+    }
 
-        mPlayShapeActivityManager.loadChordShapesFromLocalDB();
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getPlayShapeActivityManager().onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getPlayShapeActivityManager().onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        getPlayShapeActivityManager().onStop();
+        super.onStop();
     }
 
     @Override
@@ -92,8 +101,6 @@ public class PlayShapeActivity extends AppCompatActivity implements PlayShapeAct
         if(mPlayShapeActivityManager != null){
             mPlayShapeActivityManager = null;
         }
-
-        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
@@ -111,35 +118,6 @@ public class PlayShapeActivity extends AppCompatActivity implements PlayShapeAct
 
     private Button getBtnPrevious() {
         return mBtnPrevious;
-    }
-
-    /**
-     * Handles {@link LoadChordShapesFromLocalDBEvent}. Adds loaded from local {@link android.database.sqlite.SQLiteDatabase}
-     * chord shapes to the {@link java.util.ArrayList} of {@link PlayShapeActivityManager}
-     * @param loadChordShapesFromLocalDBEvent {@link LoadChordShapesFromLocalDBEvent}
-     */
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onLoadChordShapesFromLocalDBEvent(LoadChordShapesFromLocalDBEvent loadChordShapesFromLocalDBEvent){
-        PlayShapeActivityManager playShapeActivityManager = getPlayShapeActivityManager();
-
-        if(playShapeActivityManager != null){
-            playShapeActivityManager.setChordShapes(ChordsGeneratorApp.getChordsDBProvider().getChordShapes(
-                    getPlayShapeActivityManager().getChordInfoHolder().getChordShapesTableName()));
-        }
-    }
-
-    /**
-     * Hanldes {@link ChordShapesListReadyEvent}. Shows {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.fragments.PlayShapesFragment}
-     * @param chordShapesListReadyEvent {@link ChordShapesListReadyEvent}
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onChordShapesListReadyEvent(ChordShapesListReadyEvent chordShapesListReadyEvent){
-        Log.i(TAG, "onChordShapesListReadyEvent");
-        PlayShapeActivityManager playShapeActivityManager = getPlayShapeActivityManager();
-
-        if(playShapeActivityManager != null){
-            playShapeActivityManager.setPlayableShapeFragment();
-        }
     }
 
     @Override
