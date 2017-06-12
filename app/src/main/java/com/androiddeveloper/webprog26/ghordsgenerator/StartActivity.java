@@ -21,6 +21,9 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.JSONDataHasB
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.ReadJSONDataEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.SingleChordLoadedToLocalDBEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.ShapeTableNameHelper;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.ButtonGoUpdater;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.ProgressUpdater;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.UserMessageWhileLoadingUpdater;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.app_data_manager.AppDataManager;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord;
 
@@ -33,7 +36,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class StartActivity extends AppCompatActivity {
+public class StartActivity extends AppCompatActivity implements ProgressUpdater, UserMessageWhileLoadingUpdater, ButtonGoUpdater {
 
     private static final String TAG = "StartActivity_TAG";
 
@@ -229,8 +232,6 @@ public class StartActivity extends AppCompatActivity {
         if(chords != null){
             getAppDataManager().addChordsToLocalDB(chords);
         }
-
-//        getAppDataManager().addChordsToLocalDB(addChordsToLocalDbEvent.getChords());
     }
 
     /**
@@ -290,6 +291,71 @@ public class StartActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    public void changeProgressBarVisibility() {
+        ProgressBar progressBar = getPbLoading();
+
+        if(progressBar != null){
+
+            progressBar.setVisibility(progressBar.getVisibility() == View.VISIBLE ? View.INVISIBLE: View.VISIBLE);
+
+        }
+    }
+
+    @Override
+    public void setProgressBarMax(int max) {
+        ProgressBar progressBar = getPbLoading();
+
+        if(progressBar != null) {
+
+            progressBar.setMax(max);
+
+        }
+    }
+
+    @Override
+    public void setProgressBarProgress(int progress) {
+        ProgressBar progressBar = getPbLoading();
+
+        if(progressBar != null) {
+
+            progressBar.setProgress(progress);
+
+        }
+    }
+
+    @Override
+    public void updateUserContainerVisibility() {
+        LinearLayout llLoading = getLlLoading();
+
+        if(llLoading != null){
+
+            llLoading.setVisibility(llLoading.getVisibility() == View.VISIBLE ? View.VISIBLE: View.INVISIBLE);
+
+        }
+    }
+
+    @Override
+    public void updateUserMessage(String userMessageText) {
+
+        TextView tvLoading = getTvLoading();
+
+        if(tvLoading != null){
+
+            tvLoading.setText(getString(R.string.loading_text, userMessageText));
+
+        }
+    }
+
+    @Override
+    public void updateButtonGoState(boolean isEnabled) {
+        Button btnGo = getBtnGo();
+
+        if(btnGo != null){
+            btnGo.setEnabled(isEnabled);
+        }
+    }
 
     private SharedPreferences getSharedPreferences() {
         return mSharedPreferences;
