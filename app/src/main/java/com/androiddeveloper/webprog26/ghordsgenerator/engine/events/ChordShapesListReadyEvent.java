@@ -6,8 +6,9 @@ package com.androiddeveloper.webprog26.ghordsgenerator.engine.events;
  * successfully loaded from local database
  */
 
-public class ChordShapesListReadyEvent {
+public class ChordShapesListReadyEvent extends SuperEvent{
 
     public ChordShapesListReadyEvent() {
+        super(null);
     }
 }

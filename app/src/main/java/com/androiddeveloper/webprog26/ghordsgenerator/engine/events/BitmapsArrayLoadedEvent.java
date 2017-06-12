@@ -10,15 +10,9 @@ import java.util.ArrayList;
  * images successfully loaded from assets
  */
 
-public class BitmapsArrayLoadedEvent {
-
-    private final ArrayList<Bitmap> mBitmaps;
+public class BitmapsArrayLoadedEvent extends SuperEvent{
 
     public BitmapsArrayLoadedEvent(ArrayList<Bitmap> bitmaps) {
-        this.mBitmaps = bitmaps;
-    }
-
-    public ArrayList<Bitmap> getBitmaps() {
-        return mBitmaps;
+        super(bitmaps);
     }
 }

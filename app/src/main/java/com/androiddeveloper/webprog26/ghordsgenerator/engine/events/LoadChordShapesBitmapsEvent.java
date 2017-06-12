@@ -6,15 +6,9 @@ package com.androiddeveloper.webprog26.ghordsgenerator.engine.events;
  * images should be loaded from assets
  */
 
-public class LoadChordShapesBitmapsEvent {
-
-    private final String mChordShapesTableName;
+public class LoadChordShapesBitmapsEvent extends SuperEvent{
 
     public LoadChordShapesBitmapsEvent(String chordShapesTableName) {
-        this.mChordShapesTableName = chordShapesTableName;
-    }
-
-    public String getChordShapesTableName() {
-        return mChordShapesTableName;
+        super(chordShapesTableName);
     }
 }

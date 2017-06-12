@@ -6,15 +6,9 @@ package com.androiddeveloper.webprog26.ghordsgenerator.engine.events;
  * image was clicked
  */
 
-public class ChordShapeImageClickEvent {
-
-    private final int mClickedShapePosition;
+public class ChordShapeImageClickEvent extends SuperEvent{
 
     public ChordShapeImageClickEvent(int clickedShapePosition) {
-        this.mClickedShapePosition = clickedShapePosition;
-    }
-
-    public int getClickedShapePosition() {
-        return mClickedShapePosition;
+        super(clickedShapePosition);
     }
 }

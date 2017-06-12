@@ -8,7 +8,9 @@ package com.androiddeveloper.webprog26.ghordsgenerator.engine.events;
  * with it's {@link android.graphics.drawable.Drawable}s
  */
 
-public class InitNotesWithDrawablesEvent {
+public class InitNotesWithDrawablesEvent extends SuperEvent{
 
-    public InitNotesWithDrawablesEvent() {}
+    public InitNotesWithDrawablesEvent() {
+        super(null);
+    }
 }

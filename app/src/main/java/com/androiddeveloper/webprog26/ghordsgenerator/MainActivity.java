@@ -93,16 +93,26 @@ public class MainActivity extends AppCompatActivity implements SpinnerReseter{
 
             String chordTitle = mainAppScreenManager.getCurrentChord().getChordTitle();
 
-            Intent playShapeIntent = new Intent(MainActivity.this, PlayShapeActivity.class);
+            Object eventObject = chordShapeImageClickEvent.getEventObject();
+            int clickedShapePosition = -1;
 
-            playShapeIntent.putExtra(PlayShapeActivity.CHORD_INFO_HOLDER, new ChordInfoHolder(
-                    chordTitle,
-                    mainAppScreenManager.getChordSecondTitleHelper().getChordSecondTitle(chordTitle),
-                    chordShapeImageClickEvent.getClickedShapePosition(),
-                    mainAppScreenManager.getShapeTableNameHelper().getChordShapesTableName(chordTitle)
-            ));
-            startActivity(playShapeIntent);
-            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+            if(eventObject instanceof Integer){
+                clickedShapePosition = (int) eventObject;
+            }
+
+            if(clickedShapePosition != -1){
+
+                Intent playShapeIntent = new Intent(MainActivity.this, PlayShapeActivity.class);
+                playShapeIntent.putExtra(PlayShapeActivity.CHORD_INFO_HOLDER, new ChordInfoHolder(
+                        chordTitle,
+                        mainAppScreenManager.getChordSecondTitleHelper().getChordSecondTitle(chordTitle),
+                        clickedShapePosition,
+                        mainAppScreenManager.getShapeTableNameHelper().getChordShapesTableName(chordTitle)
+                ));
+                startActivity(playShapeIntent);
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+
+            }
 
         }
 

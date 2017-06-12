@@ -9,15 +9,9 @@ import java.util.ArrayList;
  * that JSON data has benn successfully converted to POJOs
  */
 
-public class DataHasBeenConvertedToPOJOsEvent {
-
-    private final ArrayList<Chord> mChords;
+public class DataHasBeenConvertedToPOJOsEvent extends SuperEvent{
 
     public DataHasBeenConvertedToPOJOsEvent(ArrayList<Chord> chords) {
-        this.mChords = chords;
-    }
-
-    public ArrayList<Chord> getChords() {
-        return mChords;
+        super(chords);
     }
 }

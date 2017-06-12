@@ -139,7 +139,12 @@ public class StartActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onJSONDataHasBeenReadEvent(JSONDataHasBeenReadEvent jsonDataHasBeenReadEvent){
         Log.i(TAG, "onJSONDataHasBeenReadEvent");
-        String resultString = jsonDataHasBeenReadEvent.getJSONString();
+        Object eventObject = jsonDataHasBeenReadEvent.getEventObject();
+        String resultString = null;
+
+        if(eventObject instanceof String){
+            resultString = (String) eventObject;
+        }
 
         if(resultString != null){
             EventBus.getDefault().post(new ConvertDataToPOJOClassesEvent(resultString));
@@ -153,7 +158,16 @@ public class StartActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onConvertDataToPOJOClassesEvent(ConvertDataToPOJOClassesEvent convertDataToPOJOClassesEvent){
         Log.i(TAG, "onConvertDataToPOJOClassesEvent");
-        getAppDataManager().convertJSONDateToPOJOClasses(convertDataToPOJOClassesEvent.getJsonString());
+        Object eventObject = convertDataToPOJOClassesEvent.getEventObject();
+        String jsonString = null;
+
+        if(eventObject instanceof String){
+            jsonString = (String) eventObject;
+        }
+
+        if(jsonString != null){
+            getAppDataManager().convertJSONDateToPOJOClasses(jsonString);
+        }
     }
 
     /**
@@ -164,7 +178,14 @@ public class StartActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDataHasBeenConvertedToPOJOsEvent(DataHasBeenConvertedToPOJOsEvent dataHasBeenConvertedToPOJOsEvent){
         Log.i(TAG, "onDataHasBeenConvertedToPOJOsEvent");
-        ArrayList<Chord> chords = dataHasBeenConvertedToPOJOsEvent.getChords();
+
+        Object eventObject = dataHasBeenConvertedToPOJOsEvent.getEventObject();
+        ArrayList<Chord> chords = null;
+
+        if(eventObject instanceof ArrayList){
+
+            chords = (ArrayList<Chord>) eventObject;
+        }
 
         if(chords != null){
 
@@ -198,7 +219,18 @@ public class StartActivity extends AppCompatActivity {
      */
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onAddChordsToLocalDbEvent(AddChordsToLocalDbEvent addChordsToLocalDbEvent){
-        getAppDataManager().addChordsToLocalDB(addChordsToLocalDbEvent.getChords());
+        Object eventObject = addChordsToLocalDbEvent.getEventObject();
+        ArrayList<Chord> chords = null;
+
+        if(eventObject instanceof ArrayList){
+            chords = (ArrayList<Chord>) eventObject;
+        }
+
+        if(chords != null){
+            getAppDataManager().addChordsToLocalDB(chords);
+        }
+
+//        getAppDataManager().addChordsToLocalDB(addChordsToLocalDbEvent.getChords());
     }
 
     /**
@@ -207,13 +239,24 @@ public class StartActivity extends AppCompatActivity {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSingleChordLoadedToLocalDBEvent(SingleChordLoadedToLocalDBEvent singleChordLoadedToLocalDBEvent){
-        AppDataManager appDataManager = getAppDataManager();
+        Object eventObject = singleChordLoadedToLocalDBEvent.getEventObject();
+        String chordTitle = null;
 
-        appDataManager.setChordsLoadedCount(appDataManager.getChordsLoadedCount() + 1);
+        if(eventObject instanceof String){
+            chordTitle = (String) eventObject;
+        }
 
-        getTvLoading().setText(getString(R.string.loading_text, singleChordLoadedToLocalDBEvent.getChordTitle()));
-        getPbLoading().setProgress((appDataManager.getChordsLoadedCount() * 100) / appDataManager.getChordsCount());
-        Log.i(TAG, "getPbLoading().getProgress(): " + getPbLoading().getProgress());
+        if(chordTitle != null){
+
+            AppDataManager appDataManager = getAppDataManager();
+
+            appDataManager.setChordsLoadedCount(appDataManager.getChordsLoadedCount() + 1);
+
+            getTvLoading().setText(getString(R.string.loading_text, chordTitle));
+            getPbLoading().setProgress((appDataManager.getChordsLoadedCount() * 100) / appDataManager.getChordsCount());
+            Log.i(TAG, "getPbLoading().getProgress(): " + getPbLoading().getProgress());
+
+        }
     }
 
     /**

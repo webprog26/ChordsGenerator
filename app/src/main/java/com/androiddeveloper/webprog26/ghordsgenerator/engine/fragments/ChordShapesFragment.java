@@ -1,5 +1,6 @@
 package com.androiddeveloper.webprog26.ghordsgenerator.engine.fragments;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,8 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.fragments_
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -152,11 +155,21 @@ public class ChordShapesFragment extends Fragment {
      */
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onLoadChordShapesBitmapsEvent(LoadChordShapesBitmapsEvent loadChordShapesBitmapsEvent){
-        getChordShapesFragmentManager()
-                .addShapesBitmapsToList(ChordsGeneratorApp
-                                        .getChordsDBProvider()
-                                        .getChordShapesBitmapsPath(loadChordShapesBitmapsEvent
-                                                                   .getChordShapesTableName()));
+        Object eventObject = loadChordShapesBitmapsEvent.getEventObject();
+        String chordShapesTableName = null;
+
+        if(eventObject instanceof String){
+            chordShapesTableName = (String) eventObject;
+        }
+
+        if(chordShapesTableName != null){
+
+            getChordShapesFragmentManager()
+                    .addShapesBitmapsToList(ChordsGeneratorApp
+                            .getChordsDBProvider()
+                            .getChordShapesBitmapsPath(chordShapesTableName));
+
+        }
     }
 
     /**
@@ -166,6 +179,15 @@ public class ChordShapesFragment extends Fragment {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onBitmapsArrayLoadedEvent(BitmapsArrayLoadedEvent bitmapsArrayLoadedEvent){
-        getChordShapesAdapter().updateAdapterData(bitmapsArrayLoadedEvent.getBitmaps());
+        Object eventObject = bitmapsArrayLoadedEvent.getEventObject();
+        ArrayList<Bitmap> bitmaps = null;
+
+        if(eventObject instanceof ArrayList){
+            bitmaps = (ArrayList<Bitmap>) eventObject;
+        }
+
+        if(bitmaps != null){
+            getChordShapesAdapter().updateAdapterData(bitmaps);
+        }
     }
 }

@@ -5,8 +5,9 @@ package com.androiddeveloper.webprog26.ghordsgenerator.engine.events;
  * JSON data should be read from assets
  */
 
-public class ReadJSONDataEvent {
+public class ReadJSONDataEvent extends SuperEvent{
 
     public ReadJSONDataEvent() {
+        super(null);
     }
 }

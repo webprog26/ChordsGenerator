@@ -5,15 +5,9 @@ package com.androiddeveloper.webprog26.ghordsgenerator.engine.events;
  * JSON data has been successfully read from assets
  */
 
-public class JSONDataHasBeenReadEvent {
-
-    private final String mJSONString;
+public class JSONDataHasBeenReadEvent extends SuperEvent{
 
     public JSONDataHasBeenReadEvent(String JSONString) {
-        this.mJSONString = JSONString;
-    }
-
-    public String getJSONString() {
-        return mJSONString;
+        super(JSONString);
     }
 }

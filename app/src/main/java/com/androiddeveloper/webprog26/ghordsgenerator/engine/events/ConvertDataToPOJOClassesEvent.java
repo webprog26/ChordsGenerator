@@ -6,15 +6,9 @@ package com.androiddeveloper.webprog26.ghordsgenerator.engine.events;
  * should be converted to POJOs
  */
 
-public class ConvertDataToPOJOClassesEvent {
-
-    private final String mJsonString;
+public class ConvertDataToPOJOClassesEvent extends SuperEvent{
 
     public ConvertDataToPOJOClassesEvent(String jsonString) {
-        this.mJsonString = jsonString;
-    }
-
-    public String getJsonString() {
-        return mJsonString;
+        super(jsonString);
     }
 }

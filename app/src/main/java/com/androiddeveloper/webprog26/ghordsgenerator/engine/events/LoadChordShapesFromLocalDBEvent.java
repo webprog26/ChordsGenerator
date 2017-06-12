@@ -6,7 +6,9 @@ package com.androiddeveloper.webprog26.ghordsgenerator.engine.events;
  * loaded from local database
  */
 
-public class LoadChordShapesFromLocalDBEvent {
+public class LoadChordShapesFromLocalDBEvent extends SuperEvent{
 
-    public LoadChordShapesFromLocalDBEvent() {}
+    public LoadChordShapesFromLocalDBEvent() {
+        super(null);
+    }
 }

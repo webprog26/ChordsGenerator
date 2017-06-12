@@ -9,15 +9,23 @@ import java.util.ArrayList;
  * to local database
  */
 
-public class AddChordsToLocalDbEvent {
 
-    private final ArrayList<Chord> mChords;
+public class AddChordsToLocalDbEvent extends SuperEvent{
 
     public AddChordsToLocalDbEvent(ArrayList<Chord> chords) {
-        this.mChords = chords;
-    }
-
-    public ArrayList<Chord> getChords() {
-        return mChords;
+        super(chords);
     }
 }
+
+//public class AddChordsToLocalDbEvent {
+//
+//    private final ArrayList<Chord> mChords;
+//
+//    public AddChordsToLocalDbEvent(ArrayList<Chord> chords) {
+//        this.mChords = chords;
+//    }
+//
+//    public ArrayList<Chord> getChords() {
+//        return mChords;
+//    }
+//}

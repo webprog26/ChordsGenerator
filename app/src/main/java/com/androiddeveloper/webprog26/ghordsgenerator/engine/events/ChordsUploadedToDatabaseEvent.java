@@ -5,8 +5,9 @@ package com.androiddeveloper.webprog26.ghordsgenerator.engine.events;
  * that chords successfully uploaded to local database
  */
 
-public class ChordsUploadedToDatabaseEvent {
+public class ChordsUploadedToDatabaseEvent extends SuperEvent{
 
     public ChordsUploadedToDatabaseEvent() {
+        super(null);
     }
 }
