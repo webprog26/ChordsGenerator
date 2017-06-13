@@ -7,7 +7,7 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.adapters.ChordShape
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.chords_generator_app.ChordsGeneratorApp;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.BitmapsArrayLoadedEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.LoadChordShapesBitmapsEvent;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.ChordShapesFragmentCallback;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.callbacks.ChordShapesFragmentCallback;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.fragments_managers.ChordShapesFragmentManager;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -16,7 +16,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 
 /**
- * Created by webpr on 13.06.2017.
+ * Handles events for {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.fragments.ChordShapesFragment}
  */
 
 public class ChordShapesFragmentEventsHandler extends AppEventsHandler {
@@ -71,6 +71,7 @@ public class ChordShapesFragmentEventsHandler extends AppEventsHandler {
      * {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape} bitmaps
      * @param bitmapsArrayLoadedEvent {@link BitmapsArrayLoadedEvent}
      */
+    @SuppressWarnings("unchecked")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onBitmapsArrayLoadedEvent(BitmapsArrayLoadedEvent bitmapsArrayLoadedEvent){
         Object eventObject = bitmapsArrayLoadedEvent.getEventObject();

@@ -11,7 +11,7 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.JSONDataHasB
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.ReadJSONDataEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.SingleChordLoadedToLocalDBEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.EventObjectsCastChecker;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.StartEventsCallback;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.callbacks.StartEventsCallback;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.app_data_manager.AppDataManager;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord;
 
@@ -22,7 +22,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 
 /**
- * Created by webpr on 12.06.2017.
+ * Handles events for {@link com.androiddeveloper.webprog26.ghordsgenerator.StartActivity}
  */
 
 public class AppStartEventsHandler extends AppEventsHandler {
@@ -99,6 +99,7 @@ public class AppStartEventsHandler extends AppEventsHandler {
      * and shows {@link ProgressBar}
      * @param dataHasBeenConvertedToPOJOsEvent {@link DataHasBeenConvertedToPOJOsEvent}
      */
+    @SuppressWarnings("unchecked")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDataHasBeenConvertedToPOJOsEvent(DataHasBeenConvertedToPOJOsEvent dataHasBeenConvertedToPOJOsEvent){
         Log.i(TAG, "onDataHasBeenConvertedToPOJOsEvent");
@@ -142,6 +143,7 @@ public class AppStartEventsHandler extends AppEventsHandler {
      * Handles {@link AddChordsToLocalDbEvent}. Adds chords and their shapes to local {@link android.database.sqlite.SQLiteDatabase}
      * @param addChordsToLocalDbEvent {@link AddChordsToLocalDbEvent}
      */
+    @SuppressWarnings("unchecked")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onAddChordsToLocalDbEvent(AddChordsToLocalDbEvent addChordsToLocalDbEvent){
         Object eventObject = addChordsToLocalDbEvent.getEventObject();

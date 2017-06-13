@@ -10,7 +10,7 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.fragments.dialogs.R
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.ChordSecondTitleHelper;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.ShapeTableNameHelper;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.UIMessageHelper;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.OnChordShapeImageClickCallback;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.callbacks.OnChordShapeImageClickCallback;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord;
 
 /**

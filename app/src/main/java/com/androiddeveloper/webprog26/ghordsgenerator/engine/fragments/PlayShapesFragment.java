@@ -14,8 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.androiddeveloper.webprog26.ghordsgenerator.R;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.InitNotesWithDrawablesEvent;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.NotesInitializedWithDrawablesEvent;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.callbacks.PlayShapeFragmentCallback;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.listeners.FretTouchListener;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.fretboard.Fretboard;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.fretboard.guitar_string.GuitarString;
@@ -24,10 +23,6 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.FretViewsHe
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.fragments_managers.PlayShapeFragmentManager;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Note;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -38,7 +33,7 @@ import butterknife.Unbinder;
  * Fragment, that shows separate {@link ChordShape} on a fretboard and lets user to play it by touching screen fretboard
  */
 
-public class PlayShapesFragment extends Fragment {
+public class PlayShapesFragment extends Fragment implements PlayShapeFragmentCallback{
 
     private static final String TAG = "PlayShapesFragment";
 
@@ -89,7 +84,21 @@ public class PlayShapesFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
+
+        Bundle args = getArguments();
+
+        if(args != null){
+
+            final ChordShape chordShape = (ChordShape) args.getSerializable(CHORD_SHAPE_TO_PLAY);
+
+            if(chordShape != null){
+
+                //Creating PlayShapeFragmentManager instance
+                mPlayShapeFragmentManager = new PlayShapeFragmentManager(chordShape,
+                        getActivity().getResources(),
+                        getActivity().getAssets(), this);
+            }
+        }
     }
 
     @Nullable
@@ -102,37 +111,39 @@ public class PlayShapesFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+
+        PlayShapeFragmentManager playShapeFragmentManager = getPlayShapeFragmentManager();
+
+        if(playShapeFragmentManager != null) {
+
+            playShapeFragmentManager.onStart();
+
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        Bundle args = getArguments();
+        PlayShapeFragmentManager playShapeFragmentManager = getPlayShapeFragmentManager();
 
-        if(args != null){
+        if(playShapeFragmentManager != null){
 
-            final ChordShape chordShape = (ChordShape) args.getSerializable(CHORD_SHAPE_TO_PLAY);
-
-            if(chordShape != null){
-
-                //Creating PlayShapeFragmentManager instance
-                mPlayShapeFragmentManager = new PlayShapeFragmentManager(chordShape,
-                                                                         getActivity().getResources(),
-                                                                         getActivity().getAssets());
-
-                fretTouchListener = new FretTouchListener(mPlayShapeFragmentManager);
+                fretTouchListener = new FretTouchListener(playShapeFragmentManager);
 
                 //Creating android.media.SoundPool to play guitar sounds
-                mPlayShapeFragmentManager.createSoundPool();
+                playShapeFragmentManager.createSoundPool();
 
                 //initializing notes with drawables
-                mPlayShapeFragmentManager.initNotesWithDrawablesAndSounds();
-                Log.i(TAG, "in PlayShapesFragment chord shape is " + chordShape.toString());
+                playShapeFragmentManager.initNotesWithDrawablesAndSounds();
 
                if(mFretViewsHelper == null){
                    //Creating new FretViewsHelper instance
-                   mFretViewsHelper = new FretViewsHelper(getActivity(), getFretboardGridLayout(), mPlayShapeFragmentManager, getStringMutedImageViews());
+                   mFretViewsHelper = new FretViewsHelper(getActivity(), getFretboardGridLayout(), playShapeFragmentManager, getStringMutedImageViews());
                }
             }
         }
-    }
 
     @Override
     public void onPause() {
@@ -156,44 +167,33 @@ public class PlayShapesFragment extends Fragment {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+
+        PlayShapeFragmentManager playShapeFragmentManager = getPlayShapeFragmentManager();
+
+        if(playShapeFragmentManager != null) {
+
+            playShapeFragmentManager.onStop();
+
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
 
     private PlayShapeFragmentManager getPlayShapeFragmentManager() {
         return mPlayShapeFragmentManager;
     }
 
-    /**
-     * Handles {@link InitNotesWithDrawablesEvent} Calls {@link PlayShapeFragmentManager} to add drawables
-     * to the {@link ChordShape} notes
-     * @param initNotesWithDrawablesEvent {@link InitNotesWithDrawablesEvent}
-     */
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onInitNotesWithDrawablesEvent(InitNotesWithDrawablesEvent initNotesWithDrawablesEvent){
-        PlayShapeFragmentManager playShapeFragmentManager = getPlayShapeFragmentManager();
 
-        if(playShapeFragmentManager != null){
 
-            playShapeFragmentManager.setDrawablesAndSoundsToNotes();
-
-        }
-    }
-
-    /**
-     * Actually main method of the class. Handles {@link NotesInitializedWithDrawablesEvent} which
-     * means that notes are completely ready to be showed, played and (or) clicked
-     * @param notesInitializedWithDrawablesEvent {@link InitNotesWithDrawablesEvent}
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNotesInitializedWithDrawablesEvent(NotesInitializedWithDrawablesEvent notesInitializedWithDrawablesEvent){
+    @Override
+    public void onFretboardReady() {
 
         final PlayShapeFragmentManager playShapeFragmentManager = getPlayShapeFragmentManager();
 
@@ -205,18 +205,18 @@ public class PlayShapesFragment extends Fragment {
 
                 //Show ChordShape's start fret position number
                 getTvFretToStart().setText(FretNumbersTransformHelper.getFretToStartString(chordShape.getStartFretPosition())
-                                           + "\n"
-                                           + getString(R.string.fret));
+                        + "\n"
+                        + getString(R.string.fret));
 
                 if(mFretViewsHelper != null){
 
-                   //Show muted strings markers
-                   mFretViewsHelper.initMutedStrings();
+                    //Show muted strings markers
+                    mFretViewsHelper.initMutedStrings();
 
-                   //Initializing notes with images
-                   mFretViewsHelper.initNotesImages();
+                    //Initializing notes with images
+                    mFretViewsHelper.initNotesImages();
 
-                if(playShapeFragmentManager.isShouldDrawBar()){
+                    if(playShapeFragmentManager.isShouldDrawBar()){
                         //Draw bar images
                         mFretViewsHelper.drawBar();
                     }
@@ -233,10 +233,10 @@ public class PlayShapesFragment extends Fragment {
                         @Override
                         public void onGlobalLayout() {
 
-                        fretboardGridLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                            fretboardGridLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
-                        if(mPlayShapeFragmentManager != null){
-                            int stringIndex = 0;
+                            if(mPlayShapeFragmentManager != null){
+                                int stringIndex = 0;
 
                                 if(mFretViewsHelper != null){
 
@@ -257,50 +257,50 @@ public class PlayShapesFragment extends Fragment {
                                             }
                                         }
                                     }
-                            }
-
-                            //Calculating notes Y-coordinates on each "string" to avoid playing sound back of the note
-                            //which is impossible in real life
-                            Fretboard fretboard = playShapeFragmentManager.getFretboard();
-
-                            if(fretboard != null){
-
-                                for(int i = 0; i < Fretboard.STRINGS_COUNT; i++){
-
-                                    GuitarString currentGuitarString = fretboard.getGuitarString(i);
-
-                                    if(currentGuitarString != null){
-
-                                        Note currentNote = currentGuitarString.getNote();
-
-                                        if(currentNote != null){
-
-                                            float stringPlayableY;
-
-                                            if(currentNote.getNoteFret() == 0){
-                                                stringPlayableY = 0;
-                                            } else {
-                                                stringPlayableY = (float) fretboardGridLayout.getChildAt(currentNote.getNoteFret() - 1).getBottom();
-                                            }
-
-
-                                            Log.i(TAG, currentGuitarString.getTitle() + " with note " + currentGuitarString.getNote().getNoteTitle()
-                                                    + " stringPlayableY " + stringPlayableY);
-                                            playShapeFragmentManager.setStringPlayableY(stringPlayableY, i);
-
-                                        } else {
-                                            Log.i(TAG, "currentNote is null at " + currentGuitarString.getTitle());
-                                        }
-                                    } else {
-                                        Log.i(TAG, "currentGuitarString is null");
-                                    }
                                 }
-                            } else {
-                                Log.i(TAG, "fretboard is null");
+
+                                //Calculating notes Y-coordinates on each "string" to avoid playing sound back of the note
+                                //which is impossible in real life
+                                Fretboard fretboard = playShapeFragmentManager.getFretboard();
+
+                                if(fretboard != null){
+
+                                    for(int i = 0; i < Fretboard.STRINGS_COUNT; i++){
+
+                                        GuitarString currentGuitarString = fretboard.getGuitarString(i);
+
+                                        if(currentGuitarString != null){
+
+                                            Note currentNote = currentGuitarString.getNote();
+
+                                            if(currentNote != null){
+
+                                                float stringPlayableY;
+
+                                                if(currentNote.getNoteFret() == 0){
+                                                    stringPlayableY = 0;
+                                                } else {
+                                                    stringPlayableY = (float) fretboardGridLayout.getChildAt(currentNote.getNoteFret() - 1).getBottom();
+                                                }
+
+
+                                                Log.i(TAG, currentGuitarString.getTitle() + " with note " + currentGuitarString.getNote().getNoteTitle()
+                                                        + " stringPlayableY " + stringPlayableY);
+                                                playShapeFragmentManager.setStringPlayableY(stringPlayableY, i);
+
+                                            } else {
+                                                Log.i(TAG, "currentNote is null at " + currentGuitarString.getTitle());
+                                            }
+                                        } else {
+                                            Log.i(TAG, "currentGuitarString is null");
+                                        }
+                                    }
+                                } else {
+                                    Log.i(TAG, "fretboard is null");
+                                }
+                                //At this time our "guitar fretboard" is ready to interact with user touches
+                                catchFretboardTouches();
                             }
-                            //At this time our "guitar fretboard" is ready to interact with user touches
-                            catchFretboardTouches();
-                        }
                             fretboardGridLayout.getViewTreeObserver().addOnGlobalLayoutListener(this);
                         }
                     });
@@ -309,7 +309,7 @@ public class PlayShapesFragment extends Fragment {
             }
         }
 //*********************************************************************************************************************************
-          //Uncomment to see detailed logs of the current ChordShape
+        //Uncomment to see detailed logs of the current ChordShape
 
 //        for(int i = 0; i < Fretboard.STRINGS_COUNT; i++){
 //

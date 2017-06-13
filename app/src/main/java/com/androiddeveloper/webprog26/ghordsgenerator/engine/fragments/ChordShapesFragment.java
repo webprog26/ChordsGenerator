@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 
 import com.androiddeveloper.webprog26.ghordsgenerator.R;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.adapters.ChordShapesAdapter;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.ChordShapesFragmentCallback;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.callbacks.ChordShapesFragmentCallback;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.fragments_managers.ChordShapesFragmentManager;
 
 import java.util.ArrayList;
@@ -110,8 +110,15 @@ public class ChordShapesFragment extends Fragment implements ChordShapesFragment
         ChordShapesFragmentManager chordShapesFragmentManager = getChordShapesFragmentManager();
 
         if(chordShapesFragmentManager != null){
-            //load bitmaps from assets via separate Thread, using EventBus
-            chordShapesFragmentManager.loadShapesBitmaps();
+
+            ChordShapesAdapter chordShapesAdapter = getChordShapesAdapter();
+
+            if(!(chordShapesAdapter.getItemCount() > 0)){
+
+
+                chordShapesFragmentManager.loadShapesBitmaps();
+
+            }
         }
     }
 

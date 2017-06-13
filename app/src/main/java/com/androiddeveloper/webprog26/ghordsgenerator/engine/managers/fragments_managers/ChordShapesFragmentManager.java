@@ -7,7 +7,7 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.BitmapsArray
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.LoadChordShapesBitmapsEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events_handlers.ChordShapesFragmentEventsHandler;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.LoadBitmapsFromAssetsHelper;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.ChordShapesFragmentCallback;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.callbacks.ChordShapesFragmentCallback;
 
 import org.greenrobot.eventbus.EventBus;
 

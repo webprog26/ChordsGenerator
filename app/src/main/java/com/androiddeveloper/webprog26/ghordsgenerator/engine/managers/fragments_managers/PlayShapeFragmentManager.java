@@ -9,7 +9,9 @@ import android.util.Log;
 
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.InitNotesWithDrawablesEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.NotesInitializedWithDrawablesEvent;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.events_handlers.PlayShapesFragmentEventsHandler;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.NotePlayer;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.callbacks.PlayShapeFragmentCallback;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.fretboard.Fretboard;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.fretboard.guitar_string.GuitarString;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.FingerIndexDrawableIDHelper;
@@ -27,7 +29,7 @@ import java.util.ArrayList;
  * operations
  */
 
-public class PlayShapeFragmentManager implements NotePlayer{
+public class PlayShapeFragmentManager extends SuperFragmentManager implements NotePlayer{
 
     private static final String TAG = "PSFManager";
 
@@ -35,17 +37,22 @@ public class PlayShapeFragmentManager implements NotePlayer{
     private final Fretboard mFretboard;
     private final Resources mResources;
     private final AssetManager mAssetManager;
+    private final PlayShapeFragmentCallback mPlayShapeFragmentCallback;
+    private final PlayShapesFragmentEventsHandler mPlayShapesFragmentEventsHandler;
 
     private SoundPool mSoundPool;
     private boolean shouldDrawBar = false;
     private int barStartPlace = ChordShape.NO_BAR_PLACE;
     private int barEndPlace = ChordShape.NO_BAR_PLACE;
 
-    public PlayShapeFragmentManager(ChordShape chordShape, Resources resources, AssetManager assetManager) {
+    public PlayShapeFragmentManager(ChordShape chordShape, Resources resources, AssetManager assetManager, PlayShapeFragmentCallback playShapeFragmentCallback) {
         this.mChordShape = chordShape;
         this.mResources = resources;
         this.mAssetManager = assetManager;
         this.mFretboard = new Fretboard(chordShape.getMutedStringsHolder());
+        this.mPlayShapeFragmentCallback = playShapeFragmentCallback;
+
+        this.mPlayShapesFragmentEventsHandler = new PlayShapesFragmentEventsHandler(this);
 
         initBarPlaces();
 
@@ -62,6 +69,16 @@ public class PlayShapeFragmentManager implements NotePlayer{
 //            }
 //        }
 //*********************************************************************************************************************************
+    }
+
+    @Override
+    public void onStart() {
+        getPlayShapesFragmentEventsHandler().subscribe();
+    }
+
+    @Override
+    public void onStop() {
+        getPlayShapesFragmentEventsHandler().unsubscribe();
     }
 
     /**
@@ -368,6 +385,14 @@ public class PlayShapeFragmentManager implements NotePlayer{
 
     private AssetManager getAssetManager() {
         return mAssetManager;
+    }
+
+    public PlayShapeFragmentCallback getPlayShapeFragmentCallback() {
+        return mPlayShapeFragmentCallback;
+    }
+
+    private PlayShapesFragmentEventsHandler getPlayShapesFragmentEventsHandler() {
+        return mPlayShapesFragmentEventsHandler;
     }
 
     @Override

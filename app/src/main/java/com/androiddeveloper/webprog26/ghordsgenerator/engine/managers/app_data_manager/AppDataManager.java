@@ -10,7 +10,7 @@ import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.ReadJSONData
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events_handlers.AppEventsHandler;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events_handlers.AppStartEventsHandler;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.ShapeTableNameHelper;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.StartEventsCallback;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.callbacks.StartEventsCallback;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord;
 
 import org.greenrobot.eventbus.EventBus;

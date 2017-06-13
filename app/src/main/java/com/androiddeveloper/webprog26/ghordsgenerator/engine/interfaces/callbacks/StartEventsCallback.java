@@ -1,7 +1,7 @@
-package com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces;
+package com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.callbacks;
 
 /**
- * Created by webpr on 12.06.2017.
+ * Handles calls from {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.events_handlers.AppStartEventsHandler}
  */
 
 public interface StartEventsCallback {

@@ -5,8 +5,7 @@ import android.util.Log;
 import com.androiddeveloper.webprog26.ghordsgenerator.PlayShapeActivity;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.ChordShapeImageClickEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.EventObjectsCastChecker;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.OnChordShapeImageClickCallback;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.screens_managers.MainAppScreenManager;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.callbacks.OnChordShapeImageClickCallback;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.Chord;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordInfoHolder;
 
@@ -14,7 +13,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 /**
- * Created by webpr on 12.06.2017.
+ * Handles events for {@link com.androiddeveloper.webprog26.ghordsgenerator.MainActivity}
  */
 
 public class MainAppEventsHandler extends AppEventsHandler {
