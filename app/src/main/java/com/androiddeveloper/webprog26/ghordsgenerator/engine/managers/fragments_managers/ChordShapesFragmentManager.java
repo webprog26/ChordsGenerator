@@ -5,7 +5,9 @@ import android.graphics.Bitmap;
 
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.BitmapsArrayLoadedEvent;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.LoadChordShapesBitmapsEvent;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.events_handlers.ChordShapesFragmentEventsHandler;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.helpers.LoadBitmapsFromAssetsHelper;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.ChordShapesFragmentCallback;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -16,17 +18,31 @@ import java.util.ArrayList;
  * with list of {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape} images
  */
 
-public class ChordShapesFragmentManager {
+public class ChordShapesFragmentManager extends SuperFragmentManager{
 
     private static final String TAG = "ChordManager";
 
     private ArrayList<Bitmap> mChordShapesBitmaps = new ArrayList<>();
     private final String mChordShapesTableName;
     private final AssetManager mAssetManager;
+    private final ChordShapesFragmentCallback mChordShapesFragmentCallback;
+    private final ChordShapesFragmentEventsHandler mChordShapesFragmentEventsHandler;
 
-    public ChordShapesFragmentManager(String chordShapesTableTitle, AssetManager assetManager) {
+    public ChordShapesFragmentManager(String chordShapesTableTitle, AssetManager assetManager, ChordShapesFragmentCallback chordShapesFragmentCallback) {
         this.mChordShapesTableName = chordShapesTableTitle;
         this.mAssetManager = assetManager;
+        this.mChordShapesFragmentCallback = chordShapesFragmentCallback;
+        this.mChordShapesFragmentEventsHandler = new ChordShapesFragmentEventsHandler(this);
+    }
+
+    @Override
+    public void onStart() {
+        getChordShapesFragmentEventsHandler().subscribe();
+    }
+
+    @Override
+    public void onStop() {
+        getChordShapesFragmentEventsHandler().unsubscribe();
     }
 
     /**
@@ -68,5 +84,13 @@ public class ChordShapesFragmentManager {
 
     private AssetManager getAssetManager() {
         return mAssetManager;
+    }
+
+    public ChordShapesFragmentCallback getChordShapesFragmentCallback() {
+        return mChordShapesFragmentCallback;
+    }
+
+    private ChordShapesFragmentEventsHandler getChordShapesFragmentEventsHandler() {
+        return mChordShapesFragmentEventsHandler;
     }
 }

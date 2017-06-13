@@ -14,14 +14,8 @@ import android.view.ViewGroup;
 
 import com.androiddeveloper.webprog26.ghordsgenerator.R;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.adapters.ChordShapesAdapter;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.chords_generator_app.ChordsGeneratorApp;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.BitmapsArrayLoadedEvent;
-import com.androiddeveloper.webprog26.ghordsgenerator.engine.events.LoadChordShapesBitmapsEvent;
+import com.androiddeveloper.webprog26.ghordsgenerator.engine.interfaces.ChordShapesFragmentCallback;
 import com.androiddeveloper.webprog26.ghordsgenerator.engine.managers.fragments_managers.ChordShapesFragmentManager;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -34,7 +28,7 @@ import butterknife.Unbinder;
  * shapes images on the app's main screen
  */
 
-public class ChordShapesFragment extends Fragment {
+public class ChordShapesFragment extends Fragment implements ChordShapesFragmentCallback{
 
     private static final String TAG = "ChordShapesFragment";
 
@@ -66,8 +60,6 @@ public class ChordShapesFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        EventBus.getDefault().register(this);
-
         Bundle args = getArguments();
 
         if(args != null){
@@ -77,7 +69,7 @@ public class ChordShapesFragment extends Fragment {
             if(chordShapesTableName != null){
 
                 //Initializing ChordShapesFragmentManager
-                mChordShapesFragmentManager = new ChordShapesFragmentManager(chordShapesTableName, getActivity().getAssets());
+                mChordShapesFragmentManager = new ChordShapesFragmentManager(chordShapesTableName, getActivity().getAssets(), this);
 
                 //Initializing "empty" ChordShapesAdapter
                 mChordShapesAdapter = new ChordShapesAdapter(mChordShapesFragmentManager.getChordShapesBitmaps(), getActivity());
@@ -100,8 +92,21 @@ public class ChordShapesFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onStart() {
+        super.onStart();
+
+        ChordShapesFragmentManager chordShapesFragmentManager = getChordShapesFragmentManager();
+
+        if(chordShapesFragmentManager != null){
+
+            getChordShapesFragmentManager().onStart();
+
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         ChordShapesFragmentManager chordShapesFragmentManager = getChordShapesFragmentManager();
 
         if(chordShapesFragmentManager != null){
@@ -111,17 +116,22 @@ public class ChordShapesFragment extends Fragment {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        ChordShapesFragmentManager chordShapesFragmentManager = getChordShapesFragmentManager();
+
+        if(chordShapesFragmentManager != null){
+
+            getChordShapesFragmentManager().onStop();
+
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         Log.i(TAG, "onDestroyView");
         unbinder.unbind();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-        Log.i(TAG, "onDestroy");
     }
 
     /**
@@ -148,44 +158,10 @@ public class ChordShapesFragment extends Fragment {
         return mChordShapesAdapter;
     }
 
-    /**
-     * Handles {@link LoadChordShapesBitmapsEvent} Adds loaded from assets bitmaps to {@link ChordShapesFragmentManager} list
-     * of {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape}s images
-     * @param loadChordShapesBitmapsEvent {@link LoadChordShapesBitmapsEvent}
-     */
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onLoadChordShapesBitmapsEvent(LoadChordShapesBitmapsEvent loadChordShapesBitmapsEvent){
-        Object eventObject = loadChordShapesBitmapsEvent.getEventObject();
-        String chordShapesTableName = null;
 
-        if(eventObject instanceof String){
-            chordShapesTableName = (String) eventObject;
-        }
 
-        if(chordShapesTableName != null){
-
-            getChordShapesFragmentManager()
-                    .addShapesBitmapsToList(ChordsGeneratorApp
-                            .getChordsDBProvider()
-                            .getChordShapesBitmapsPath(chordShapesTableName));
-
-        }
-    }
-
-    /**
-     * Handles {@link BitmapsArrayLoadedEvent} Update {@link ChordShapesAdapter} data with
-     * {@link com.androiddeveloper.webprog26.ghordsgenerator.engine.models.ChordShape} bitmaps
-     * @param bitmapsArrayLoadedEvent {@link BitmapsArrayLoadedEvent}
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onBitmapsArrayLoadedEvent(BitmapsArrayLoadedEvent bitmapsArrayLoadedEvent){
-        Object eventObject = bitmapsArrayLoadedEvent.getEventObject();
-        ArrayList<Bitmap> bitmaps = null;
-
-        if(eventObject instanceof ArrayList){
-            bitmaps = (ArrayList<Bitmap>) eventObject;
-        }
-
+    @Override
+    public void onBitmapsArrayLoaded(ArrayList<Bitmap> bitmaps) {
         if(bitmaps != null){
             getChordShapesAdapter().updateAdapterData(bitmaps);
         }

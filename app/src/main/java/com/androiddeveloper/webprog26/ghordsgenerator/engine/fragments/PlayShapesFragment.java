@@ -42,6 +42,8 @@ public class PlayShapesFragment extends Fragment {
 
     private static final String TAG = "PlayShapesFragment";
 
+    private FretTouchListener fretTouchListener;
+
     //Tag to receive chosen ChordShape as an argument
     public static final String CHORD_SHAPE_TO_PLAY = "chord_shape_to_play";
 
@@ -114,6 +116,9 @@ public class PlayShapesFragment extends Fragment {
                 mPlayShapeFragmentManager = new PlayShapeFragmentManager(chordShape,
                                                                          getActivity().getResources(),
                                                                          getActivity().getAssets());
+
+                fretTouchListener = new FretTouchListener(mPlayShapeFragmentManager);
+
                 //Creating android.media.SoundPool to play guitar sounds
                 mPlayShapeFragmentManager.createSoundPool();
 
@@ -351,7 +356,8 @@ public class PlayShapesFragment extends Fragment {
      * Adds FretTouchListener to the fretboardGridLayout
      */
     private void catchFretboardTouches(){
-        getFretboardGridLayout().setOnTouchListener(new FretTouchListener(getPlayShapeFragmentManager()));
+//        getFretboardGridLayout().setOnTouchListener(new FretTouchListener(getPlayShapeFragmentManager()));
+        getFretboardGridLayout().setOnTouchListener(fretTouchListener);
     }
 
     public GridLayout getFretboardGridLayout() {
